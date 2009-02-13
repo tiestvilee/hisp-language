@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hisp", "Hisp\Hisp.csproj", "{A3319AD4-82A4-415B-9D88-745885E09676}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHisp", "TestHisp\TestHisp.csproj", "{B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3319AD4-82A4-415B-9D88-745885E09676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3319AD4-82A4-415B-9D88-745885E09676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3319AD4-82A4-415B-9D88-745885E09676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3319AD4-82A4-415B-9D88-745885E09676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
