@@ -10,18 +10,19 @@ namespace com.tiestvilee.hisp
     public class HispCompiler
     {
         private int currentLineIndent = 0;
-        private IToken oldToken;
+
 
         public Hisp compile(string hispString)
         {
             HispLexer lexer = new HispLexer(new System.IO.StringReader(hispString));
 
             lexer.nextToken();
-            return new Hisp(CompileNode(lexer, 0));
+            return new Hisp(CompileTagNode(lexer, 0));
         }
 
-        private Node CompileNode(HispLexer lexer, int indent)
+        private Node CompileTagNode(HispLexer lexer, int indent)
         {
+            int currentTagIndent = -1;
             IToken token = lexer.getTokenObject();
 
             if(lexer.getTokenObject().Type == HispLexerTokenTypes.LPAREN)
@@ -33,76 +34,73 @@ namespace com.tiestvilee.hisp
                 token = lexer.nextToken();
 
             string tagName = token.getText();
+            Console.WriteLine("compiling new node " + tagName);
             IList<Node> children = new List<Node>();
 
             token = lexer.nextToken();
             bool reachedEndOfNode = false;
+
             while ( ! reachedEndOfNode)
             {
+                Console.WriteLine("round and round for " + tagName + " '" + token.getText() + "'");
                 switch (token.Type)
                 {
-                    case HispLexerTokenTypes.UNQUOTED_STRING:
-                        throw new Exception("shouldn't be here");
-                        TagNode childTagNode = (TagNode) CompileNode(lexer, currentLineIndent); // new TagNode(token.getText(), new List<Node>());
-                        children.Add(childTagNode);
-                        break;
                     case HispLexerTokenTypes.LPAREN:
-                        TagNode childTagNode2 = (TagNode)CompileNode(lexer, currentLineIndent); // new TagNode(token.getText(), new List<Node>());
-                        children.Add(childTagNode2);
+                    case HispLexerTokenTypes.UNQUOTED_STRING:
+                        TagNode childTagNode = (TagNode) CompileTagNode(lexer, currentLineIndent);
+                        children.Add(childTagNode);
                         break;
                     case HispLexerTokenTypes.HASH:
                         token = lexer.nextToken();
                         IdNode childIdNode = new IdNode(token.getText());
                         children.Add(childIdNode);
+                        lexer.nextToken();
                         break;
                     case HispLexerTokenTypes.CLASS:
                         token = lexer.nextToken();
                         ClassNode childClassNode = new ClassNode(token.getText());
                         children.Add(childClassNode);
+                        lexer.nextToken();
                         break;
                     case HispLexerTokenTypes.NEWLINE:
                         SkipNewlines(lexer);
                         currentLineIndent = CountSpaces(lexer);
-                        reachedEndOfNode = ProcessLineBasedOnIndent(lexer, children, indent);
+                        if (currentTagIndent < 0)
+                        {
+                            currentTagIndent = currentLineIndent;
+                            if (currentTagIndent <= indent)
+                            {
+                                reachedEndOfNode = true;
+                            }
+                        }
+                        else
+                        {
+                            if (currentLineIndent > currentTagIndent)
+                            {
+                                CompileTagNode(lexer, currentTagIndent);
+                            }
+                        }
+                        break;
+                    case HispLexerTokenTypes.EOF:
+                    case HispLexerTokenTypes.RPAREN:
+                        reachedEndOfNode = true;
+                        lexer.nextToken();
+                        break;
+                    default:
+                        lexer.nextToken();
                         break;
                 }
-                if (!reachedEndOfNode)
+
+                if (currentLineIndent < currentTagIndent)
                 {
-                    if (oldToken != null)
-                    {
-                        token = oldToken;
-                        oldToken = null;
-                    } 
-                    else 
-                    {
-                        token = lexer.nextToken();
-                    }
-                    if (token.Type == HispLexerTokenTypes.RPAREN || token.Type == HispLexerTokenTypes.EOF)
-                    {
-                        reachedEndOfNode = true;
-                    }
+                    reachedEndOfNode = true;
                 }
+                token = lexer.getTokenObject();
             }
+
+            Console.WriteLine("compiled node " + tagName + " '" + token.getText() + "' " + currentLineIndent + " vs " + currentTagIndent);
 
             return new TagNode(tagName, children);
-        }
-
-        private bool ProcessLineBasedOnIndent(HispLexer lexer, IList<Node> children, int indent)
-        {
-            if (currentLineIndent > indent)
-            {
-                children.Add(CompileNode(lexer, currentLineIndent));
-                if(currentLineIndent <= indent)
-                {
-                    return true;
-                }
-            }
-            else if (currentLineIndent <= indent)
-            {
-                return true;
-                // what about going up by more than 1...
-            }
-            return false;
         }
 
         private void SkipNewlines(HispLexer lexer)
@@ -121,7 +119,7 @@ namespace com.tiestvilee.hisp
                 token = lexer.nextToken();
                 result++;
             }
-            oldToken = token;
+            //oldToken = token;
             return result;
         }
     }
