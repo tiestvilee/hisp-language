@@ -34,19 +34,23 @@ namespace com.tiestvilee.hisp.parser
 	using LexerSharedInputState           = antlr.LexerSharedInputState;
 	using BitSet                          = antlr.collections.impl.BitSet;
 	
+   // global code stuff that will be included in the source file just before the 'MyParser' class below
+   //...
+
 	public 	class HispLexer : antlr.CharScanner	, TokenStream
 	 {
 		public const int EOF = 1;
 		public const int NULL_TREE_LOOKAHEAD = 3;
-		public const int LPAREN = 4;
-		public const int IDENTIFIER = 5;
-		public const int RPAREN = 6;
-		public const int CLASS = 7;
-		public const int HASH = 8;
-		public const int ATTRIBUTE = 9;
-		public const int EQUALS = 10;
-		public const int STRING = 11;
-		public const int WHITESPACE = 12;
+		public const int UNQUOTED_STRING = 4;
+		public const int STRING = 5;
+		public const int LPAREN = 6;
+		public const int RPAREN = 7;
+		public const int CLASS = 8;
+		public const int HASH = 9;
+		public const int ATTRIBUTE = 10;
+		public const int EQUALS = 11;
+		public const int NEWLINE = 12;
+		public const int WHITESPACE = 13;
 		
 		public HispLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -103,7 +107,7 @@ tryAgain:
 						case 's':  case 't':  case 'u':  case 'v':
 						case 'w':  case 'x':  case 'y':  case 'z':
 						{
-							mIDENTIFIER(true);
+							mUNQUOTED_STRING(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -149,8 +153,13 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\t':  case '\n':  case '\u000c':  case '\r':
-						case ' ':
+						case '\n':  case '\u000c':  case '\r':
+						{
+							mNEWLINE(true);
+							theRetToken = returnToken_;
+							break;
+						}
+						case '\t':  case ' ':
 						{
 							mWHITESPACE(true);
 							theRetToken = returnToken_;
@@ -183,13 +192,13 @@ tryAgain:
 			}
 		}
 		
-	public void mIDENTIFIER(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mUNQUOTED_STRING(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = IDENTIFIER;
+		_ttype = UNQUOTED_STRING;
 		
 		{ // ( ... )+
-			int _cnt8=0;
+			int _cnt3=0;
 			for (;;)
 			{
 				switch ( cached_LA1 )
@@ -235,12 +244,12 @@ tryAgain:
 				}
 				default:
 				{
-					if (_cnt8 >= 1) { goto _loop8_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+					if (_cnt3 >= 1) { goto _loop3_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
 				}
 				break; }
-				_cnt8++;
+				_cnt3++;
 			}
-_loop8_breakloop:			;
+_loop3_breakloop:			;
 		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
@@ -267,11 +276,11 @@ _loop8_breakloop:			;
 				}
 				else
 				{
-					goto _loop12_breakloop;
+					goto _loop7_breakloop;
 				}
 				
 			}
-_loop12_breakloop:			;
+_loop7_breakloop:			;
 		}    // ( ... )*
 		match('"');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -366,6 +375,43 @@ _loop12_breakloop:			;
 		returnToken_ = _token;
 	}
 	
+	public void mNEWLINE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; IToken _token=null; int _begin=text.Length;
+		_ttype = NEWLINE;
+		
+		{
+			switch ( cached_LA1 )
+			{
+			case '\r':
+			{
+				match('\r');
+				break;
+			}
+			case '\n':
+			{
+				match('\n');
+				break;
+			}
+			case '\u000c':
+			{
+				match('\u000C');
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());
+			}
+			 }
+		}
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	public void mWHITESPACE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
@@ -379,24 +425,9 @@ _loop12_breakloop:			;
 				match(' ');
 				break;
 			}
-			case '\r':
-			{
-				match('\r');
-				break;
-			}
 			case '\t':
 			{
 				match('\t');
-				break;
-			}
-			case '\u000c':
-			{
-				match('\u000C');
-				break;
-			}
-			case '\n':
-			{
-				match('\n');
 				break;
 			}
 			default:
@@ -405,7 +436,6 @@ _loop12_breakloop:			;
 			}
 			 }
 		}
-		_ttype = Token.SKIP;
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="com\tiestvilee\hisp\HispCompilerTest.cs" />
     <Compile Include="com\tiestvilee\hisp\BasicHispTest.cs" />
-    <Compile Include="com\tiestvilee\hisp\parser\HispParserTest.cs" />
+    <Compile Include="com\tiestvilee\hisp\parser\HispLexerTest.cs" />
     <Compile Include="com\tiestvilee\hisp\parser\WhitespaceToBracketsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
