@@ -11,6 +11,29 @@ namespace ClassLibrary1.com.tiestvilee.hisp
     public class HispCompilerTest
     {
         [Test]
+        public void CanCompileSingleExpressionIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(@"<html>");
+            TagNode html = (TagNode)hisp.Root;
+            Assert.AreEqual("html", html.getText());
+        }
+
+        [Test]
+        public void CanCompileTwoLevelTreeIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(@"<html <head>>");
+            TagNode html = (TagNode)hisp.Root;
+            Assert.AreEqual("html", html.getText());
+
+            TagNode head = (TagNode) html[0];
+            Assert.AreEqual("head", head.getText());
+        }
+
+        [Test]
         public void CanCompileSimpleStringIntoHisp()
         {
             HispCompiler compiler = new HispCompiler();
@@ -26,7 +49,7 @@ namespace ClassLibrary1.com.tiestvilee.hisp
         {
             HispCompiler compiler = new HispCompiler();
 
-            Hisp hisp = compiler.compile(@"<html <head title> <body <h1 #top-heading .heading .red> #body1>>");
+            Hisp hisp = compiler.compile(@"<html <head <title>> <body <h1 #top-heading .heading .red> #body1>>");
             TagNode html = (TagNode)hisp.Root;
             AssertBasicStructureOK(html);
 
@@ -66,7 +89,7 @@ namespace ClassLibrary1.com.tiestvilee.hisp
 @"html
     head
         title");
-            TagNode html = (TagNode)hisp.Root; 
+            TagNode html = (TagNode)hisp.Root;
             Assert.AreEqual("html", html.getText());
 
             TagNode head = (TagNode)html[0];
@@ -74,6 +97,22 @@ namespace ClassLibrary1.com.tiestvilee.hisp
 
             TagNode title = (TagNode)head[0];
             Assert.AreEqual("title", title.getText());
+
+        }
+
+        [Test]
+        public void CanCompileBracketlessStringWithIdIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(
+@"html
+    #abc");
+            TagNode html = (TagNode)hisp.Root; 
+            Assert.AreEqual("html", html.getText());
+
+            IdNode id = (IdNode)html[0];
+            Assert.AreEqual("abc", id.getText());
 
         }
 
@@ -110,6 +149,21 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             AssertBasicStructureOK(html);
         }
 
+
+        [Test]
+        public void CanCompileBracketlessStringWithLotsOfBacksteppingIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(
+@"html
+    head
+        title
+            somethingelse
+    body");
+            TagNode html = (TagNode)hisp.Root;
+            Assert.AreEqual("body", html[1].getText());
+        }
 
     }
 
