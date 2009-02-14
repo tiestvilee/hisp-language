@@ -52,9 +52,7 @@
     <Compile Include="com\tiestvilee\hisp\Hisp.cs" />
     <Compile Include="com\tiestvilee\hisp\HispCompiler.cs" />
     <Compile Include="com\tiestvilee\hisp\parser\HispLexer.cs" />
-    <Compile Include="com\tiestvilee\hisp\parser\HispParser.cs" />
-    <Compile Include="com\tiestvilee\hisp\parser\HispTokenTypes.cs" />
-    <Compile Include="com\tiestvilee\hisp\parser\WhitespaceToBrackets.cs" />
+    <Compile Include="com\tiestvilee\hisp\parser\HispLexerTokenTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
