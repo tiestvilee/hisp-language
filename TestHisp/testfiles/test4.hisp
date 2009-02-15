@@ -5,10 +5,11 @@
         #abc
         @custom=value
         div
-            h1
+            h1 "this is a heading"
                 .heading
         div
             span .hidden
                 .red
+                "this is a span"
             img
                 @alt="this is an image"

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,74 +21,65 @@ namespace com.tiestvilee.hisp
 
         public string Render()
         {
+            RenderVisitor visitor = new RenderVisitor();
             StringBuilder result = new StringBuilder(256);
-
-            RenderNode(root, result, "", null);
+            root.Accept(visitor, "", result, null);
 
             return result.ToString();
         }
 
-        private void RenderNode(Node ast, StringBuilder result, string indent, Attributes attributes)
+        public class RenderVisitor : HispVisitor
         {
-            if(ast == null)
+            public override void Visit(TagNode tagNode, string indent, StringBuilder result, Attributes attributes)
             {
-                return;
+                StringBuilder subResult = new StringBuilder(256);
+                Attributes subAttributes = new Attributes();
+                string newIndent = indent + "  ";
+                foreach (Node node in tagNode.Children)
+                {
+                    node.Accept(this, newIndent, subResult, subAttributes);
+                }
+
+                result.Append(indent).Append('<').Append(tagNode.GetText()).Append(subAttributes.ToString());
+
+                if (subResult.Length == 0)
+                {
+                    result.Append("/>\r\n");
+                }
+                else
+                {
+
+                    result.Append(">\r\n");
+                    result.Append(subResult);
+                    result.Append(indent).Append("</").Append(tagNode.GetText()).Append(">\r\n");
+                }
             }
 
-//            switch (ast.Type)
-//            {
-////                case HispTokenTypes.UNQUOTED_STRING:
-////                    RenderTag(ast, indent, result);
-////                    break;
-////
-////                case HispTokenTypes.HASH:
-////                    attributes.Id = ast.getFirstChild().getText();
-////                    break;
-////
-////                case HispTokenTypes.CLASS:
-////                    attributes.addAttributeValue("class", ast.getFirstChild().getText());
-////                    break;
-////
-////                case HispTokenTypes.ATTRIBUTE:
-////                    string key = ast.getFirstChild().getText();
-////                    string value = ast.getFirstChild().getNextSibling().getText();
-////                    if(value[0] == '"')
-////                    {
-////                        value = value.Substring(1, value.Length - 2);
-////                    }
-////                    attributes.addAttributeValue(key, value);
-////                    break;
-//
-//            }
-//
-//            RenderNode(ast.getNextSibling(), result, indent, attributes);
+            public override void Visit(IdNode node, string indent, StringBuilder result, Attributes attributes)
+            {
+                attributes.Id = node.GetText();
+            }
 
-            return;
+            public override void Visit(ClassNode node, string indent, StringBuilder result, Attributes attributes)
+            {
+                attributes.addAttributeValue("class", node.GetText());
+            }
+
+            public override void Visit(AttributeNode node, string indent, StringBuilder result, Attributes attributes)
+            {
+                attributes.addAttributeValue(node.GetText(), node.GetValue());
+            }
+
+            public override void Visit(StringNode node, string indent, StringBuilder result, Attributes attributes)
+            {
+                result.Append(indent).Append(node.GetText()).Append("\r\n");
+            }
+
         }
 
-        private void RenderTag(Node ast, string indent, StringBuilder result)
-        {
-//            StringBuilder subResult = new StringBuilder(256);
-//            Attributes subAttributes = new Attributes();
-//            RenderNode(ast.getFirstChild(), subResult, indent + "    ", subAttributes);
-//
-//            result.Append(indent).Append('<').Append(ast.getText()).Append(subAttributes.ToString());
-//
-//            if (subResult.Length == 0)
-//            {
-//                result.Append("/>\r\n");
-//            }
-//            else
-//            {
-//
-//                result.Append(">\r\n");
-//                result.Append(subResult);
-//                result.Append(indent).Append("</").Append(ast.getText()).Append(">\r\n");
-//            }
-        }
     }
 
-    internal class Attributes
+    public class Attributes
     {
         private Dictionary<string, string> attributes = new Dictionary<string, string>();
 
