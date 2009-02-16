@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using antlr;
 using antlr.collections;
@@ -19,9 +20,9 @@ namespace com.tiestvilee.hisp
             this.root = root;
         }
 
-        public string Render()
+        public string Render(Dictionary<string, object> context)
         {
-            RenderVisitor visitor = new RenderVisitor();
+            RenderVisitor visitor = new RenderVisitor(context);
             StringBuilder result = new StringBuilder(256);
             root.Accept(visitor, "", result, null);
 
@@ -30,7 +31,70 @@ namespace com.tiestvilee.hisp
 
         public class RenderVisitor : HispVisitor
         {
+            private readonly Dictionary<string, object> context;
+
+            public RenderVisitor(Dictionary<string, object> context)
+            {
+                this.context = context;
+            }
+
             public override void Visit(TagNode tagNode, string indent, StringBuilder result, Attributes attributes)
+            {
+                object variable;
+                if(context.TryGetValue(tagNode.GetText(), out variable))
+                {
+                    ProcessVariable(tagNode, variable, indent, result, attributes);
+                }
+                else
+                {
+                    RenderTag(tagNode, indent, result);
+                }
+            }
+
+            private void ProcessVariable(TagNode tagNode, object variable, string indent, StringBuilder result, Attributes attributes)
+            {
+                if (tagNode.Children.Count > 0)
+                {
+                    variable = MakeReflectiveCall(variable, tagNode.Children);
+                }
+
+                if (variable.GetType().IsSubclassOf(typeof(Node)))
+                {
+                    ((Node)variable).Accept(this, indent, result, attributes);
+                }
+                else
+                {
+                    result.Append(indent).Append(variable.ToString()).Append("\r\n");
+                }
+            }
+
+            private object MakeReflectiveCall(object variable, IList<Node> children)
+            {
+                string memberName = children[0].GetText();
+                foreach (MemberInfo info in variable.GetType().GetMember(memberName))
+                {
+                    if(info.GetType().IsSubclassOf(typeof(PropertyInfo)))
+                    {
+                        return ((PropertyInfo) info).GetGetMethod().Invoke(variable, null);
+                    }
+
+                    if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
+                    {
+                        return ((MethodInfo) info).Invoke(variable, null);
+                    }
+                }
+                memberName = "Get" + memberName;
+                foreach (MemberInfo info in variable.GetType().GetMember(memberName))
+                {
+                    if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
+                    {
+                        return ((MethodInfo)info).Invoke(variable, null);
+                    }
+                }
+                return "REFLECTIVE CALL FAILED";
+            }
+
+            private void RenderTag(TagNode tagNode, string indent, StringBuilder result)
             {
                 StringBuilder subResult = new StringBuilder(256);
                 Attributes subAttributes = new Attributes();
@@ -73,6 +137,10 @@ namespace com.tiestvilee.hisp
             public override void Visit(StringNode node, string indent, StringBuilder result, Attributes attributes)
             {
                 result.Append(indent).Append(node.GetText()).Append("\r\n");
+            }
+
+            public override void Visit(VariableNode node, string indent, StringBuilder result, Attributes attributes)
+            {
             }
 
         }
