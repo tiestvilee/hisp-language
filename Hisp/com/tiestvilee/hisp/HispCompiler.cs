@@ -83,8 +83,11 @@ namespace com.tiestvilee.hisp
                         lexer.nextToken();
                         break;
                     case HispLexerTokenTypes.NEWLINE:
-                        SkipNewlines(lexer);
-                        currentLineIndent = CountSpaces(lexer);
+                        token = SkipNewlines(lexer);
+                        currentLineIndent = 0;
+                        if (token.Type == HispLexerTokenTypes.WHITESPACE)
+                            currentLineIndent = token.getText().Length;
+                            
                         if (currentTagIndent < 0)
                         {
                             currentTagIndent = currentLineIndent;
@@ -117,24 +120,14 @@ namespace com.tiestvilee.hisp
             }
         }
 
-        private void SkipNewlines(HispLexer lexer)
+        private IToken SkipNewlines(HispLexer lexer)
         {
             IToken token = lexer.getTokenObject();
             while (token.Type == HispLexerTokenTypes.NEWLINE)
                 token = lexer.nextToken();
+            return token;
         }
 
-        private int CountSpaces(HispLexer lexer)
-        {
-            IToken token = lexer.getTokenObject();
-            int result = 0;
-            while (token.Type == HispLexerTokenTypes.WHITESPACE)
-            {
-                token = lexer.nextToken();
-                result++;
-            }
-            return result;
-        }
     }
 
 
