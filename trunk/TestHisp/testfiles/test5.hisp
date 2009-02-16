@@ -1,0 +1,16 @@
+﻿html
+    head
+        title
+    body 
+        #abc
+        @custom=value
+        div
+            h1 <astring>
+                .heading
+        div
+            span .hidden
+                aclass // don't _need_ brackets, but more readable
+                <anobject>
+            img
+                @alt="this is an image"
+            <anumber>

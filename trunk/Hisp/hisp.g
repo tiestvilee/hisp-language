@@ -20,11 +20,13 @@ STRING: '"' (~('"'))* '"';
 
 LPAREN: '<';
 RPAREN: '>';
-CLASS: '.';
+DOT: '.';
 HASH: '#';
 ATTRIBUTE: '@';
 EQUALS: '=';
-VARIABLE: '$';
+DOLLAR: '$';
 
 NEWLINE: ( '\r' | '\n' | '\u000C' );
 WHITESPACE: (' ')+;
+
+COMMENT: "//" (~( '\r' | '\n' | '\u000C' ))* ( '\r' | '\n' | '\u000C' ) {$setType(Token.SKIP);};

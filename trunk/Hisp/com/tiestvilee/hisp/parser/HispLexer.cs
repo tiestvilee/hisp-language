@@ -42,13 +42,14 @@ namespace com.tiestvilee.hisp.parser
 		public const int STRING = 5;
 		public const int LPAREN = 6;
 		public const int RPAREN = 7;
-		public const int CLASS = 8;
+		public const int DOT = 8;
 		public const int HASH = 9;
 		public const int ATTRIBUTE = 10;
 		public const int EQUALS = 11;
-		public const int VARIABLE = 12;
+		public const int DOLLAR = 12;
 		public const int NEWLINE = 13;
 		public const int WHITESPACE = 14;
+		public const int COMMENT = 15;
 		
 		public HispLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -129,7 +130,7 @@ tryAgain:
 						}
 						case '.':
 						{
-							mCLASS(true);
+							mDOT(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -153,7 +154,7 @@ tryAgain:
 						}
 						case '$':
 						{
-							mVARIABLE(true);
+							mDOLLAR(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -166,6 +167,12 @@ tryAgain:
 						case ' ':
 						{
 							mWHITESPACE(true);
+							theRetToken = returnToken_;
+							break;
+						}
+						case '/':
+						{
+							mCOMMENT(true);
 							theRetToken = returnToken_;
 							break;
 						}
@@ -323,10 +330,10 @@ _loop7_breakloop:			;
 		returnToken_ = _token;
 	}
 	
-	public void mCLASS(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mDOT(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = CLASS;
+		_ttype = DOT;
 		
 		match('.');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -379,10 +386,10 @@ _loop7_breakloop:			;
 		returnToken_ = _token;
 	}
 	
-	public void mVARIABLE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+	public void mDOLLAR(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
-		_ttype = VARIABLE;
+		_ttype = DOLLAR;
 		
 		match('$');
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
@@ -460,6 +467,62 @@ _loop19_breakloop:			;
 		returnToken_ = _token;
 	}
 	
+	public void mCOMMENT(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; IToken _token=null; int _begin=text.Length;
+		_ttype = COMMENT;
+		
+		match("//");
+		{    // ( ... )*
+			for (;;)
+			{
+				if ((tokenSet_1_.member(cached_LA1)))
+				{
+					{
+						match(tokenSet_1_);
+					}
+				}
+				else
+				{
+					goto _loop23_breakloop;
+				}
+				
+			}
+_loop23_breakloop:			;
+		}    // ( ... )*
+		{
+			switch ( cached_LA1 )
+			{
+			case '\r':
+			{
+				match('\r');
+				break;
+			}
+			case '\n':
+			{
+				match('\n');
+				break;
+			}
+			case '\u000c':
+			{
+				match('\u000C');
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());
+			}
+			 }
+		}
+		_ttype = Token.SKIP;
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	
 	private static long[] mk_tokenSet_0_()
 	{
@@ -467,6 +530,12 @@ _loop19_breakloop:			;
 		return data;
 	}
 	public static readonly BitSet tokenSet_0_ = new BitSet(mk_tokenSet_0_());
+	private static long[] mk_tokenSet_1_()
+	{
+		long[] data = { -13313L, -1L, 0L, 0L};
+		return data;
+	}
+	public static readonly BitSet tokenSet_1_ = new BitSet(mk_tokenSet_1_());
 	
 }
 }

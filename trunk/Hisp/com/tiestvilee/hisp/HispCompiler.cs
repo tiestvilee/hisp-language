@@ -61,7 +61,7 @@ namespace com.tiestvilee.hisp
                         children.Add(childIdNode);
                         lexer.nextToken();
                         break;
-                    case HispLexerTokenTypes.CLASS:
+                    case HispLexerTokenTypes.DOT:
                         token = lexer.nextToken();
                         ClassNode childClassNode = new ClassNode(token.getText());
                         children.Add(childClassNode);
@@ -138,6 +138,7 @@ namespace com.tiestvilee.hisp
         public abstract void Visit(ClassNode node, string indent, StringBuilder result, Attributes attributes);
         public abstract void Visit(AttributeNode node, string indent, StringBuilder result, Attributes attributes);
         public abstract void Visit(StringNode node, string indent, StringBuilder result, Attributes attributes);
+        public abstract void Visit(VariableNode node, string indent, StringBuilder result, Attributes attributes);
     }
 
 
@@ -245,6 +246,19 @@ namespace com.tiestvilee.hisp
         public string GetValue()
         {
             return value;
+        }
+
+        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        {
+            visitor.Visit(this, indent, result, attributes);
+        }
+    }
+
+    public class VariableNode : Node
+    {
+        public VariableNode(string text)
+        {
+            this.text = StripInvertedCommas(text);
         }
 
         public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
