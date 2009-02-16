@@ -16,7 +16,7 @@ namespace com.tiestvilee.hisp.parser
         public const int STRING = HispLexerTokenTypes.STRING;
         public const int LPAREN = HispLexerTokenTypes.LPAREN;
         public const int RPAREN = HispLexerTokenTypes.RPAREN;
-        public const int CLASS = HispLexerTokenTypes.CLASS;
+        public const int DOT = HispLexerTokenTypes.DOT;
         public const int HASH = HispLexerTokenTypes.HASH;
         public const int ATTRIBUTE = HispLexerTokenTypes.ATTRIBUTE;
         public const int EQUALS = HispLexerTokenTypes.EQUALS;
@@ -46,7 +46,7 @@ namespace com.tiestvilee.hisp.parser
         {
             assertThatTreeMatchesParsing(
                 "<html < head > <body #abc .abc>>",
-                new int[] {   LPAREN, UNQUOTED_STRING, WHITESPACE, LPAREN, WHITESPACE, UNQUOTED_STRING, WHITESPACE, RPAREN, WHITESPACE, LPAREN, UNQUOTED_STRING, WHITESPACE, HASH, UNQUOTED_STRING, WHITESPACE, CLASS, UNQUOTED_STRING, RPAREN, RPAREN, EOF },
+                new int[] {   LPAREN, UNQUOTED_STRING, WHITESPACE, LPAREN, WHITESPACE, UNQUOTED_STRING, WHITESPACE, RPAREN, WHITESPACE, LPAREN, UNQUOTED_STRING, WHITESPACE, HASH, UNQUOTED_STRING, WHITESPACE, DOT, UNQUOTED_STRING, RPAREN, RPAREN, EOF },
                 new string[] { null,  "html",          null,       null,   null,       "head",          null,       null,   null,       null,   "body",          null,       null, "abc",           null,       null,  "abc",           null,   null,   null });
         }
 

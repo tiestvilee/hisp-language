@@ -45,6 +45,10 @@ namespace com.tiestvilee.hisp
                 {
                     ProcessVariable(tagNode, variable, indent, result, attributes);
                 }
+                else if (tagNode.GetText() == "METHOD CALL")
+                {
+                    ProcessVariable(tagNode, variable, indent, result, attributes);
+                }
                 else
                 {
                     RenderTag(tagNode, indent, result);
