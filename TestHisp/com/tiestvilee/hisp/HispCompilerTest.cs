@@ -211,6 +211,36 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Assert.AreEqual("body", html[1].GetText());
         }
 
+
+        [Test]
+        public void CanCompileBracketlessStringWithDeepNestingOfMethodCallsIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(
+@"html
+    <<<anobject method1 param1> method2 param2a param2b> method3>");
+            TagNode html = (TagNode)hisp.Root;
+
+            TagNode outerMethodCall = (TagNode)html[0];
+            TagNode middleMethodCall = (TagNode)outerMethodCall[0];
+            TagNode innerMethodCall = (TagNode)middleMethodCall[0];
+
+            Assert.AreEqual("METHOD CALL", outerMethodCall.GetText());
+
+            Assert.AreEqual("METHOD CALL", middleMethodCall.GetText());
+
+            Assert.AreEqual("anobject", innerMethodCall.GetText());
+
+            Assert.AreEqual("method1", innerMethodCall[0].GetText());
+            Assert.AreEqual("param1", innerMethodCall[1].GetText());
+
+            Assert.AreEqual("method2", middleMethodCall[1].GetText());
+            Assert.AreEqual("param2a", middleMethodCall[2].GetText());
+            Assert.AreEqual("param2b", middleMethodCall[3].GetText());
+
+            Assert.AreEqual("method3", outerMethodCall[1].GetText());
+        }
     }
 
 }

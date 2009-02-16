@@ -52,6 +52,17 @@ namespace com.tiestvilee.hisp
             AssertThatHispRendersCorrectly("testfiles\\test6.hisp", "testfiles\\test6.html", context);
         }
 
+        [Test]
+        public void TestNestedGets()
+        {
+            Dictionary<string, object> context = new Dictionary<string, object>();
+            context["anobject"] = new DummyObject();
+            HispCompiler compiler = new HispCompiler();
+            Hisp hisp = compiler.compile("html\r\n    <<anobject Itself> Itself>");
+            Console.WriteLine(hisp.Root.Describe(""));
+            Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>", hisp.Render(context));
+        }
+
         public class DummyObject
         {
             public override string ToString()
@@ -60,6 +71,8 @@ namespace com.tiestvilee.hisp
             }
 
             public string Property { get{return "a property";}}
+            public DummyObject Itself { get { return this; } }
+
             public string GetAccessor()
             {
                 return "an accessor";
