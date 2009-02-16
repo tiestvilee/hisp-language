@@ -58,9 +58,9 @@ namespace com.tiestvilee.hisp
             Dictionary<string, object> context = new Dictionary<string, object>();
             context["anobject"] = new DummyObject();
             HispCompiler compiler = new HispCompiler();
-            Hisp hisp = compiler.compile("html\r\n    <<anobject Itself> Itself>");
+            Hisp hisp = compiler.compile("html\r\n    <<<anobject Itself> Itself> Itself>");
             Console.WriteLine(hisp.Root.Describe(""));
-            Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>", hisp.Render(context));
+            Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>\r\n", hisp.Render(context));
         }
 
         public class DummyObject
