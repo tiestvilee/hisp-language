@@ -32,6 +32,7 @@ namespace com.tiestvilee.hisp
         public class RenderVisitor : HispVisitor
         {
             private readonly Dictionary<string, object> context;
+            private object resultingVariable;
 
             public RenderVisitor(Dictionary<string, object> context)
             {
@@ -43,11 +44,12 @@ namespace com.tiestvilee.hisp
                 object variable;
                 if(context.TryGetValue(tagNode.GetText(), out variable))
                 {
-                    ProcessVariable(tagNode, variable, indent, result, attributes);
+                    ProcessVariable(tagNode.Children, variable, indent, result, attributes);
                 }
                 else if (tagNode.GetText() == "METHOD CALL")
                 {
-                    ProcessVariable(tagNode, variable, indent, result, attributes);
+                    tagNode[0].Accept(this, indent, new StringBuilder(), attributes);
+                    ProcessVariable(tail(tagNode.Children), resultingVariable, indent, result, attributes);
                 }
                 else
                 {
@@ -55,11 +57,12 @@ namespace com.tiestvilee.hisp
                 }
             }
 
-            private void ProcessVariable(TagNode tagNode, object variable, string indent, StringBuilder result, Attributes attributes)
+            private void ProcessVariable(IList<Node> children, object variable, string indent, StringBuilder result, Attributes attributes)
             {
-                if (tagNode.Children.Count > 0)
+                if (children.Count > 0)
                 {
-                    variable = MakeReflectiveCall(variable, tagNode.Children);
+                    variable = MakeReflectiveCall(variable, children);
+                    resultingVariable = variable;
                 }
 
                 if (variable.GetType().IsSubclassOf(typeof(Node)))
@@ -95,7 +98,8 @@ namespace com.tiestvilee.hisp
                         return ((MethodInfo)info).Invoke(variable, null);
                     }
                 }
-                return "REFLECTIVE CALL FAILED";
+
+                return "REFLECTIVE CALL FAILED [" + variable.GetType().Name + "].[" + memberName + "]";
             }
 
             private void RenderTag(TagNode tagNode, string indent, StringBuilder result)
@@ -147,6 +151,16 @@ namespace com.tiestvilee.hisp
             {
             }
 
+
+            private IList<Node> tail(IList<Node> children)
+            {
+                IList<Node> result = new List<Node>();
+
+                for (int i = 1; i < children.Count; i++)
+                    result.Add(children[i]);
+
+                return result;
+            }
         }
 
     }
