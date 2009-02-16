@@ -5,7 +5,7 @@
       <setting name="UsedSolutionBuilderID">0</setting>
     </integer>
     <boolean>
-      <setting name="livetemplates.csharp.usevar">True</setting>
+      <setting name="livetemplates.csharp.usevar">False</setting>
       <setting name="SolutionAnalysisEnabled">False</setting>
     </boolean>
   </SettingsComponent>
@@ -14,31 +14,57 @@
   </NAntValidationSettings>
   <RecentFiles>
     <RecentFiles>
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:HispLexer.cs" caret="579" scrollPosition="0|0" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:WhitespaceToBrackets.cs" caret="2023" scrollPosition="0|54" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:HispTokenTypes.cs" caret="272" scrollPosition="0|0" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:HispParser.cs" caret="9116" scrollPosition="0|163" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1648" scrollPosition="0|32" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="88" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test2.html" caret="112" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test1.html" caret="10" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test4.html" caret="198" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test3.html" caret="88" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test2.hisp" caret="0" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test1.hisp" caret="0" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test3.hisp" caret="116" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/d:parser/f:HispLexerTest.cs" caret="673" scrollPosition="0|0" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:HispLexerTokenTypes.cs" caret="0" scrollPosition="0|0" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/d:parser/f:HispLexer.cs" caret="13484" scrollPosition="0|0" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/f:hisp.g" caret="730" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test4.hisp" caret="0" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test6.hisp" caret="258" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test7.hisp" caret="42" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test6.html" caret="161" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7063" scrollPosition="0|205" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:BasicHispTest.cs" caret="1988" scrollPosition="0|44" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="2497" scrollPosition="0|42" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3429" scrollPosition="0|42" />
     </RecentFiles>
     <RecentEdits>
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3504" scrollPosition="0|19" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3504" scrollPosition="0|25" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3504" scrollPosition="0|25" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="737" scrollPosition="0|22" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1801" scrollPosition="0|25" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="500" scrollPosition="0|5" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3489" scrollPosition="0|50" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3032" scrollPosition="0|50" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3409" scrollPosition="0|68" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="3308" scrollPosition="0|68" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="2918" scrollPosition="0|65" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="933" scrollPosition="0|38" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1208" scrollPosition="0|38" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="903" scrollPosition="0|29" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="905" scrollPosition="0|32" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1571" scrollPosition="0|38" />
-      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="386" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test6.hisp" caret="258" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:testfiles/f:test7.hisp" caret="68" scrollPosition="0|0" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="6484" scrollPosition="0|197" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="880" scrollPosition="0|13" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="606" scrollPosition="0|13" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="435" scrollPosition="0|7" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="1039" scrollPosition="0|29" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="1344" scrollPosition="0|29" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="7190" scrollPosition="0|173" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="8154" scrollPosition="0|185" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="6683" scrollPosition="0|201" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="6683" scrollPosition="0|201" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="6683" scrollPosition="0|201" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="6683" scrollPosition="0|207" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="4836" scrollPosition="0|88" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="1682" scrollPosition="0|42" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7590" scrollPosition="0|202" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7565" scrollPosition="0|202" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7493" scrollPosition="0|202" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="1165" scrollPosition="0|27" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="2429" scrollPosition="0|42" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="2026" scrollPosition="0|42" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:HispCompiler.cs" caret="2497" scrollPosition="0|42" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7567" scrollPosition="0|205" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:HispCompilerTest.cs" caret="7063" scrollPosition="0|205" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:BasicHispTest.cs" caret="2358" scrollPosition="0|30" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:BasicHispTest.cs" caret="2667" scrollPosition="0|48" />
+      <File id="B5A9DA91-AAA5-43C5-9D89-4CD5B1FD28B0/d:com/d:tiestvilee/d:hisp/f:BasicHispTest.cs" caret="2236" scrollPosition="0|44" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1929" scrollPosition="0|42" />
+      <File id="A3319AD4-82A4-415B-9D88-745885E09676/d:com/d:tiestvilee/d:hisp/f:Hisp.cs" caret="1557" scrollPosition="0|42" />
     </RecentEdits>
   </RecentFiles>
   <UnitTestRunner>
@@ -51,8 +77,8 @@
   </UnitTestRunner>
   <CompletionStatisticsManager>
     <ItemStatistics item="Default">
-      <Item value="public" priority="7" />
-      <Item value="void" priority="6" />
+      <Item value="public" priority="15" />
+      <Item value="void" priority="7" />
       <Item value="System" priority="1" />
       <Item value="IO" priority="1" />
       <Item value="StringReader" priority="0" />
@@ -61,72 +87,118 @@
       <Item value="parser" priority="1" />
       <Item value="toar" priority="0" />
       <Item value="t" priority="0" />
-      <Item value="string" priority="12" />
-      <Item value="new" priority="13" />
+      <Item value="string" priority="18" />
+      <Item value="new" priority="23" />
       <Item value="WhitespaceToBrackets" priority="0" />
       <Item value="converter" priority="0" />
-      <Item value="return" priority="4" />
+      <Item value="return" priority="16" />
       <Item value="s" priority="3" />
-      <Item value="if" priority="12" />
+      <Item value="if" priority="24" />
       <Item value="for" priority="2" />
-      <Item value="int" priority="3" />
-      <Item value="foreach" priority="1" />
+      <Item value="int" priority="8" />
+      <Item value="foreach" priority="4" />
       <Item value="char" priority="0" />
       <Item value="in" priority="0" />
-      <Item value="StringBuilder" priority="5" />
-      <Item value="result" priority="10" />
+      <Item value="StringBuilder" priority="8" />
+      <Item value="result" priority="17" />
       <Item value="private" priority="2" />
       <Item value="switch" priority="1" />
       <Item value="State" priority="4" />
-      <Item value="break" priority="3" />
+      <Item value="break" priority="6" />
       <Item value="c" priority="5" />
       <Item value="state" priority="3" />
-      <Item value="case" priority="4" />
+      <Item value="case" priority="5" />
       <Item value="depth" priority="3" />
       <Item value="i" priority="2" />
-      <Item value="else" priority="7" />
+      <Item value="else" priority="18" />
       <Item value="actual" priority="0" />
       <Item value="currentIndent" priority="4" />
-      <Item value="indent" priority="5" />
+      <Item value="indent" priority="13" />
       <Item value="HispCompilerTest" priority="0" />
       <Item value="HispCompiler" priority="2" />
       <Item value="compiler" priority="1" />
-      <Item value="hisp" priority="1" />
+      <Item value="hisp" priority="2" />
       <Item value="ast" priority="10" />
       <Item value="RenderNode" priority="0" />
       <Item value="test1" priority="0" />
       <Item value="hispString" priority="2" />
       <Item value="com" priority="0" />
       <Item value="StringBuffer" priority="0" />
-      <Item value="children" priority="0" />
-      <Item value="null" priority="0" />
-      <Item value="attributes" priority="6" />
-      <Item value="Attributes" priority="4" />
-      <Item value="override" priority="0" />
+      <Item value="children" priority="3" />
+      <Item value="null" priority="3" />
+      <Item value="attributes" priority="10" />
+      <Item value="Attributes" priority="7" />
+      <Item value="override" priority="2" />
       <Item value="Type" priority="0" />
       <Item value="HispTokenTypes" priority="1" />
       <Item value="subAttributes" priority="0" />
-      <Item value="Dictionary" priority="0" />
+      <Item value="Dictionary" priority="1" />
       <Item value="Dictionary&lt;string,string&gt;" priority="0" />
-      <Item value="value" priority="5" />
+      <Item value="value" priority="11" />
       <Item value="newValue" priority="0" />
       <Item value="addAttributeValue" priority="0" />
       <Item value="pair" priority="1" />
       <Item value="bool" priority="0" />
-      <Item value="true" priority="0" />
+      <Item value="true" priority="3" />
       <Item value="firstPair" priority="1" />
       <Item value="false" priority="0" />
       <Item value="attribute" priority="0" />
       <Item value="oldValue" priority="0" />
-      <Item value="subResult" priority="0" />
-      <Item value="key" priority="0" />
+      <Item value="subResult" priority="1" />
+      <Item value="key" priority="1" />
+      <Item value="oldToken" priority="0" />
+      <Item value="currentLineIndent" priority="8" />
+      <Item value="throw" priority="0" />
+      <Item value="Exception" priority="0" />
+      <Item value="lexer" priority="5" />
+      <Item value="TagNode" priority="3" />
+      <Item value="html" priority="3" />
+      <Item value="default" priority="0" />
+      <Item value="token" priority="7" />
+      <Item value="Console" priority="8" />
+      <Item value="HispLexerTokenTypes" priority="0" />
+      <Item value="reachedEndOfNode" priority="2" />
+      <Item value="IdNode" priority="1" />
+      <Item value="currentTagIndent" priority="5" />
+      <Item value="CountSpaces" priority="0" />
+      <Item value="newTagIndent" priority="1" />
+      <Item value="CompileTagNode" priority="0" />
+      <Item value="tagName" priority="6" />
+      <Item value="out" priority="3" />
+      <Item value="root" priority="0" />
+      <Item value="child" priority="0" />
+      <Item value="abstract" priority="1" />
+      <Item value="Node" priority="2" />
+      <Item value="visitor" priority="1" />
+      <Item value="node" priority="6" />
+      <Item value="Stack" priority="0" />
+      <Item value="newIndent" priority="0" />
+      <Item value="tagNode" priority="4" />
+      <Item value="AttributeNode" priority="0" />
+      <Item value="ValueType" priority="0" />
+      <Item value="input" priority="1" />
+      <Item value="context" priority="5" />
+      <Item value="object" priority="2" />
+      <Item value="variable" priority="6" />
+      <Item value="PropertyAttribute" priority="0" />
+      <Item value="n" priority="0" />
+      <Item value="info" priority="2" />
+      <Item value="PropertyInfo" priority="0" />
+      <Item value="MethodInfo" priority="0" />
+      <Item value="memberName" priority="1" />
+      <Item value="childTagNode2" priority="0" />
+      <Item value="List&lt;Node&gt;" priority="0" />
+      <Item value="firstMethodCall" priority="0" />
+      <Item value="innerMethodCall" priority="0" />
+      <Item value="DummyObject" priority="0" />
+      <Item value="this" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:com.tiestvilee.hisp.parser.HispParser">
       <Item value="expression" priority="0" />
       <Item value="setASTNodeClass" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@NUnit.Framework.Assert">
-      <Item value="AreEqual" priority="3" />
+      <Item value="AreEqual" priority="6" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:antlr.CommonAST">
       <Item value="ToStringList" priority="0" />
@@ -135,13 +207,14 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.String">
       <Item value="Trim" priority="3" />
-      <Item value="Length" priority="1" />
+      <Item value="Length" priority="3" />
       <Item value="Replace" priority="0" />
-      <Item value="Substring" priority="0" />
+      <Item value="Substring" priority="2" />
+      <Item value="StartsWith" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Text.StringBuilder">
       <Item value="ToString" priority="2" />
-      <Item value="Append" priority="15" />
+      <Item value="Append" priority="18" />
       <Item value="Length" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Hisp.com.tiestvilee.hisp.parser.WhitespaceToBrackets+State">
@@ -171,10 +244,12 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:com.tiestvilee.hisp.Hisp">
       <Item value="Render" priority="0" />
+      <Item value="Root" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:com.tiestvilee.hisp.Attributes">
       <Item value="ToString" priority="0" />
-      <Item value="addAttributeValue" priority="0" />
+      <Item value="addAttributeValue" priority="1" />
+      <Item value="Id" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@com.tiestvilee.hisp.parser.HispTokenTypes">
       <Item value="IDENTIFIER" priority="0" />
@@ -187,10 +262,72 @@
       <Item value="Value" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.Dictionary`2">
-      <Item value="TryGetValue" priority="0" />
+      <Item value="TryGetValue" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Console">
-      <Item value="WriteLine" priority="0" />
+      <Item value="WriteLine" priority="10" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@com.tiestvilee.hisp.parser.HispLexerTokenTypes">
+      <Item value="RPAREN" priority="0" />
+      <Item value="EOF" priority="0" />
+      <Item value="ATTRIBUTE" priority="0" />
+      <Item value="STRING" priority="0" />
+      <Item value="WHITESPACE" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.parser.HispLexer">
+      <Item value="nextToken" priority="3" />
+      <Item value="getTokenObject" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.TagNode">
+      <Item value="getText" priority="0" />
+      <Item value="GetText" priority="1" />
+      <Item value="Children" priority="1" />
+      <Item value="ToString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:antlr.IToken">
+      <Item value="getText" priority="6" />
+      <Item value="Type" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.Node">
+      <Item value="getText" priority="0" />
+      <Item value="render" priority="0" />
+      <Item value="Accept" priority="2" />
+      <Item value="Describe" priority="1" />
+      <Item value="GetText" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.HispVisitor">
+      <Item value="Visit" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.IdNode">
+      <Item value="getText" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.AttributeNode">
+      <Item value="GetValue" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:com.tiestvilee.hisp.StringNode">
+      <Item value="GetText" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Object">
+      <Item value="ToString" priority="0" />
+      <Item value="GetType" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Type">
+      <Item value="IsSubclassOf" priority="1" />
+      <Item value="GetProperty" priority="0" />
+      <Item value="GetMember" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList`1">
+      <Item value="Count" priority="0" />
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.MemberInfo">
+      <Item value="GetType" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.PropertyInfo">
+      <Item value="GetGetMethod" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.MethodInfo">
+      <Item value="Invoke" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>
