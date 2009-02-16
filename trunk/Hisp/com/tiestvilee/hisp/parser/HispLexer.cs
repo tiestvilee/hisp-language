@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060930): "hISP.g" -> "HispLexer.cs"$
+// $ANTLR 2.7.7 (20060930): "hisp.g" -> "HispLexer.cs"$
 
     // gets inserted in the C# source file before any
     // generated namespace declarations
@@ -34,9 +34,6 @@ namespace com.tiestvilee.hisp.parser
 	using LexerSharedInputState           = antlr.LexerSharedInputState;
 	using BitSet                          = antlr.collections.impl.BitSet;
 	
-   // global code stuff that will be included in the source file just before the 'MyParser' class below
-   //...
-
 	public 	class HispLexer : antlr.CharScanner	, TokenStream
 	 {
 		public const int EOF = 1;
@@ -49,8 +46,9 @@ namespace com.tiestvilee.hisp.parser
 		public const int HASH = 9;
 		public const int ATTRIBUTE = 10;
 		public const int EQUALS = 11;
-		public const int NEWLINE = 12;
-		public const int WHITESPACE = 13;
+		public const int VARIABLE = 12;
+		public const int NEWLINE = 13;
+		public const int WHITESPACE = 14;
 		
 		public HispLexer(Stream ins) : this(new ByteBuffer(ins))
 		{
@@ -153,13 +151,19 @@ tryAgain:
 							theRetToken = returnToken_;
 							break;
 						}
+						case '$':
+						{
+							mVARIABLE(true);
+							theRetToken = returnToken_;
+							break;
+						}
 						case '\n':  case '\u000c':  case '\r':
 						{
 							mNEWLINE(true);
 							theRetToken = returnToken_;
 							break;
 						}
-						case '\t':  case ' ':
+						case ' ':
 						{
 							mWHITESPACE(true);
 							theRetToken = returnToken_;
@@ -375,6 +379,20 @@ _loop7_breakloop:			;
 		returnToken_ = _token;
 	}
 	
+	public void mVARIABLE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
+{
+		int _ttype; IToken _token=null; int _begin=text.Length;
+		_ttype = VARIABLE;
+		
+		match('$');
+		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
+		{
+			_token = makeToken(_ttype);
+			_token.setText(text.ToString(_begin, text.Length-_begin));
+		}
+		returnToken_ = _token;
+	}
+	
 	public void mNEWLINE(bool _createToken) //throws RecognitionException, CharStreamException, TokenStreamException
 {
 		int _ttype; IToken _token=null; int _begin=text.Length;
@@ -417,25 +435,23 @@ _loop7_breakloop:			;
 		int _ttype; IToken _token=null; int _begin=text.Length;
 		_ttype = WHITESPACE;
 		
-		{
-			switch ( cached_LA1 )
+		{ // ( ... )+
+			int _cnt19=0;
+			for (;;)
 			{
-			case ' ':
-			{
-				match(' ');
-				break;
+				if ((cached_LA1==' '))
+				{
+					match(' ');
+				}
+				else
+				{
+					if (_cnt19 >= 1) { goto _loop19_breakloop; } else { throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());; }
+				}
+				
+				_cnt19++;
 			}
-			case '\t':
-			{
-				match('\t');
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltForCharException(cached_LA1, getFilename(), getLine(), getColumn());
-			}
-			 }
-		}
+_loop19_breakloop:			;
+		}    // ( ... )+
 		if (_createToken && (null == _token) && (_ttype != Token.SKIP))
 		{
 			_token = makeToken(_ttype);

@@ -1,4 +1,4 @@
-// $ANTLR 2.7.7 (20060930): "hISP.g" -> "HispLexer.cs"$
+// $ANTLR 2.7.7 (20060930): "hisp.g" -> "HispLexer.cs"$
 
     // gets inserted in the C# source file before any
     // generated namespace declarations
@@ -18,8 +18,9 @@ namespace com.tiestvilee.hisp.parser
 		public const int HASH = 9;
 		public const int ATTRIBUTE = 10;
 		public const int EQUALS = 11;
-		public const int NEWLINE = 12;
-		public const int WHITESPACE = 13;
+		public const int VARIABLE = 12;
+		public const int NEWLINE = 13;
+		public const int WHITESPACE = 14;
 		
 	}
 }
