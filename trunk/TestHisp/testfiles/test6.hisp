@@ -2,9 +2,6 @@
     body 
         div
             <anobject Property>
-        div
-            <anobject <GetAccessor>>
         div .display
-            anobject
-                Accessor // again, prefer to put the brackets in...
+            anobject Accessor // again, prefer to put the brackets in...
             <anobject AddClass>
