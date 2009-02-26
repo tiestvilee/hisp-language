@@ -59,8 +59,30 @@ namespace com.tiestvilee.hisp
             context["anobject"] = new DummyObject();
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile("html\r\n    <<<anobject Itself> Itself> Itself>");
-            Console.WriteLine(hisp.Root.Describe(""));
             Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>\r\n", hisp.Render(context));
+        }
+
+        [Test]
+        public void TestNestedGetsReturningClass()
+        {
+            Dictionary<string, object> context = new Dictionary<string, object>();
+            context["anobject"] = new DummyObject();
+            HispCompiler compiler = new HispCompiler();
+            Hisp hisp = compiler.compile("html\r\n    <<<anobject Itself> Itself> AddClass>");
+            Assert.AreEqual("<html class=\"red\"/>\r\n", hisp.Render(context));
+        }
+
+        [Test]
+        public void TestCondReturningClass()
+        {
+            Dictionary<string, object> context = new Dictionary<string, object>();
+            HispCompiler compiler = new HispCompiler();
+            Hisp hisp = compiler.compile(
+@"html
+  cond
+    <eq ""a"" ""b""> <body .class>");
+            Console.WriteLine(hisp.Render(context));
+            Assert.AreEqual("<html>\r\n  <body class=\"class\"/>\r\n</html>", hisp.Render(context));
         }
 
         public class DummyObject
@@ -91,7 +113,9 @@ namespace com.tiestvilee.hisp
 
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile(hispString);
-            Assert.AreEqual(resultString, hisp.Render(context));
+            string actual = hisp.Render(context);
+            Console.WriteLine(actual);
+            Assert.AreEqual(resultString, actual);
         }
     }
 }

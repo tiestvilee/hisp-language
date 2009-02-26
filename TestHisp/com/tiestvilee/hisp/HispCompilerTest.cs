@@ -16,8 +16,8 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             HispCompiler compiler = new HispCompiler();
 
             Hisp hisp = compiler.compile(@"<html>");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
         }
 
         [Test]
@@ -26,11 +26,11 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             HispCompiler compiler = new HispCompiler();
 
             Hisp hisp = compiler.compile(@"<html <head>>");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            TagNode head = (TagNode) html[0];
-            Assert.AreEqual("head", head.GetText());
+            ListNode head = (ListNode) html[1];
+            Assert.AreEqual("head", head[0].GetText());
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             HispCompiler compiler = new HispCompiler();
 
             Hisp hisp = compiler.compile(@"<html <head <title>> <body <h1>>>");
-            TagNode html = (TagNode)hisp.Root;
+            ListNode html = hisp.Root;
             AssertBasicStructureOK(html);
 
         }
@@ -50,34 +50,37 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             HispCompiler compiler = new HispCompiler();
 
             Hisp hisp = compiler.compile(@"<html <head <title>> <body <h1 #top-heading .heading .red> #body1>>");
-            TagNode html = (TagNode)hisp.Root;
+            ListNode html = hisp.Root;
             AssertBasicStructureOK(html);
 
-            IdNode headingId = (IdNode) html[1][0][0];
+            IdNode headingId = (IdNode)html[2][1][1];
             Assert.AreEqual(headingId.GetText(), "top-heading");
-            ClassNode headingClass = (ClassNode)html[1][0][1];
+
+            ClassNode headingClass = (ClassNode)html[2][1][2];
             Assert.AreEqual(headingClass.GetText(), "heading");
-            ClassNode redClass = (ClassNode)html[1][0][2];
+
+            ClassNode redClass = (ClassNode)html[2][1][3];
             Assert.AreEqual(redClass.GetText(), "red");
-            IdNode bodyId = (IdNode)html[1][1];
+
+            IdNode bodyId = (IdNode)html[2][2];
             Assert.AreEqual(bodyId.GetText(), "body1");
         }
 
-        private void AssertBasicStructureOK(TagNode html)
+        private void AssertBasicStructureOK(ListNode html)
         {
-            Assert.AreEqual("html", html.GetText());
+            Assert.AreEqual("html", html[0].GetText());
 
-            TagNode head = (TagNode)html[0];
-            Assert.AreEqual("head", head.GetText());
+            ListNode head = (ListNode)html[1];
+            Assert.AreEqual("head", head[0].GetText());
 
-            TagNode title = (TagNode)head[0];
-            Assert.AreEqual("title", title.GetText());
+            ListNode title = (ListNode)head[1];
+            Assert.AreEqual("title", title[0].GetText());
 
-            TagNode body = (TagNode)html[1];
-            Assert.AreEqual("body", body.GetText());
+            ListNode body = (ListNode)html[2];
+            Assert.AreEqual("body", body[0].GetText());
 
-            TagNode h1 = (TagNode)body[0];
-            Assert.AreEqual("h1", h1.GetText());
+            ListNode h1 = (ListNode)body[1];
+            Assert.AreEqual("h1", h1[0].GetText());
         }
 
         [Test]
@@ -89,14 +92,14 @@ namespace ClassLibrary1.com.tiestvilee.hisp
 @"html
     head
         title");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            TagNode head = (TagNode)html[0];
-            Assert.AreEqual("head", head.GetText());
+            ListNode head = (ListNode)html[1];
+            Assert.AreEqual("head", head[0].GetText());
 
-            TagNode title = (TagNode)head[0];
-            Assert.AreEqual("title", title.GetText());
+            ListNode title = (ListNode)head[1];
+            Assert.AreEqual("title", title[0].GetText());
 
         }
 
@@ -108,10 +111,10 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
     #abc");
-            TagNode html = (TagNode)hisp.Root; 
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root; 
+            Assert.AreEqual("html", html[0].GetText());
 
-            IdNode id = (IdNode)html[0];
+            IdNode id = (IdNode)html[1];
             Assert.AreEqual("abc", id.GetText());
 
         }
@@ -124,10 +127,10 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
     .abc");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            ClassNode classNode = (ClassNode)html[0];
+            ClassNode classNode = (ClassNode)html[1];
             Assert.AreEqual("abc", classNode.GetText());
         }
 
@@ -139,10 +142,10 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
     @abc=xyz");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            AttributeNode attributeNode = (AttributeNode)html[0];
+            AttributeNode attributeNode = (AttributeNode)html[1];
             Assert.AreEqual("abc", attributeNode.GetText());
             Assert.AreEqual("xyz", attributeNode.GetValue());
         }
@@ -155,10 +158,10 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
     ""a string""");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            StringNode attributeNode = (StringNode)html[0];
+            StringNode attributeNode = (StringNode)html[1];
             Assert.AreEqual("a string", attributeNode.GetText());
         }
 
@@ -172,11 +175,11 @@ namespace ClassLibrary1.com.tiestvilee.hisp
     head
         title
     body");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("html", html.GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("html", html[0].GetText());
 
-            TagNode body = (TagNode)html[1];
-            Assert.AreEqual("body", body.GetText());
+            ListNode body = (ListNode)html[2];
+            Assert.AreEqual("body", body[0].GetText());
 
         }
 
@@ -191,7 +194,7 @@ namespace ClassLibrary1.com.tiestvilee.hisp
         title
     body
         h1");
-            TagNode html = (TagNode) hisp.Root;
+            ListNode html = hisp.Root;
             AssertBasicStructureOK(html);
         }
 
@@ -207,8 +210,31 @@ namespace ClassLibrary1.com.tiestvilee.hisp
         title
             somethingelse
     body");
-            TagNode html = (TagNode)hisp.Root;
-            Assert.AreEqual("body", html[1].GetText());
+            ListNode html = hisp.Root;
+            Assert.AreEqual("body", html[2][0].GetText());
+            Assert.AreEqual("<html <head <title <somethingelse >>><body >>", html.Describe(null));
+        }
+
+        [Test]
+        public void CanCompileCondStatementIntoHisp()
+        {
+            HispCompiler compiler = new HispCompiler();
+
+            Hisp hisp = compiler.compile(
+@"html
+    if <eq a b>
+        <true-case
+        <false-case");
+            ListNode html = hisp.Root;
+            ListNode ifNode = (ListNode)html[1];
+            Assert.AreEqual("if", ifNode[0].GetText());
+
+            ListNode condition = (ListNode) ifNode[1];
+            Assert.AreEqual("eq", condition[0].GetText());
+            Assert.AreEqual("a", condition[1].GetText());
+            Assert.AreEqual("b", condition[2].GetText());
+            Assert.AreEqual("true-case", ifNode[2][0].GetText());
+            Assert.AreEqual("false-case", ifNode[3][0].GetText());
         }
 
 
@@ -220,20 +246,21 @@ namespace ClassLibrary1.com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
     <<<anobject method1 param1> method2 param2a param2b> method3>");
-            TagNode html = (TagNode)hisp.Root;
+            ListNode html = hisp.Root;
 
-            TagNode outerMethodCall = (TagNode)html[0];
-            TagNode middleMethodCall = (TagNode)outerMethodCall[0];
-            TagNode innerMethodCall = (TagNode)middleMethodCall[0];
+            ListNode outerMethodCall = (ListNode)html[1];
+            ListNode middleMethodCall = (ListNode)outerMethodCall[0];
+            ListNode innerMethodCall = (ListNode)middleMethodCall[0];
 
-            Assert.AreEqual("METHOD CALL", outerMethodCall.GetText());
+            Assert.AreEqual("<<LIST>>", outerMethodCall.GetText());
 
-            Assert.AreEqual("METHOD CALL", middleMethodCall.GetText());
+            Assert.AreEqual("<<LIST>>", middleMethodCall.GetText());
 
-            Assert.AreEqual("anobject", innerMethodCall.GetText());
+            Assert.AreEqual("<<LIST>>", innerMethodCall.GetText());
 
-            Assert.AreEqual("method1", innerMethodCall[0].GetText());
-            Assert.AreEqual("param1", innerMethodCall[1].GetText());
+            Assert.AreEqual("anobject", innerMethodCall[0].GetText());
+            Assert.AreEqual("method1", innerMethodCall[1].GetText());
+            Assert.AreEqual("param1", innerMethodCall[2].GetText());
 
             Assert.AreEqual("method2", middleMethodCall[1].GetText());
             Assert.AreEqual("param2a", middleMethodCall[2].GetText());

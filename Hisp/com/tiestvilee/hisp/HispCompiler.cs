@@ -27,27 +27,18 @@ namespace com.tiestvilee.hisp
             return new Hisp(CompileTagNode(lexer, 0, ref currentLineIndent));
         }
 
-        private Node CompileTagNode(HispLexer lexer, int indent, ref int currentLineIndent)
+        private ListNode CompileTagNode(HispLexer lexer, int indent, ref int currentLineIndent)
         {
             IToken token = lexer.getTokenObject();
 
             while (token.Type == HispLexerTokenTypes.WHITESPACE || token.Type == HispLexerTokenTypes.NEWLINE)
                 token = lexer.nextToken();
 
-            string tagName = token.getText();
             IList<Node> children = new List<Node>();
 
-            if (token.Type == HispLexerTokenTypes.LPAREN)
-            {
-                tagName = "METHOD CALL";
-            }
-            else
-            {
-                lexer.nextToken();
-            }
             ProcessTokensInTagNode(lexer, indent, ref currentLineIndent, children);
 
-            return new TagNode(tagName, children);
+            return new ListNode(children);
         }
 
         private void ProcessTokensInTagNode(HispLexer lexer, int indent, ref int currentLineIndent, IList<Node> children)
@@ -60,16 +51,16 @@ namespace com.tiestvilee.hisp
                 {
                     case HispLexerTokenTypes.LPAREN:
                         lexer.nextToken();
-                        children.Add((TagNode)CompileTagNode(lexer, currentLineIndent, ref currentLineIndent));
+                        children.Add(CompileTagNode(lexer, currentLineIndent, ref currentLineIndent));
                         break;
                     case HispLexerTokenTypes.UNQUOTED_STRING:
                         if (currentLineIndent > indent)
                         {
-                            children.Add((TagNode)CompileTagNode(lexer, currentLineIndent, ref currentLineIndent));
+                            children.Add(CompileTagNode(lexer, currentLineIndent, ref currentLineIndent));
                         }
                         else
                         {
-                            children.Add(new TagNode(token.getText(), new List<Node>()));
+                            children.Add(new AtomNode(token.getText()));
                             lexer.nextToken();
                         }
                         break;
@@ -151,7 +142,8 @@ namespace com.tiestvilee.hisp
 
     public abstract class HispVisitor
     {
-        public abstract void Visit(TagNode node, string indent, StringBuilder result, Attributes attributes);
+        public abstract void Visit(ListNode node, string indent, StringBuilder result, Attributes attributes);
+        public abstract void Visit(AtomNode node, string indent, StringBuilder result, Attributes attributes);
         public abstract void Visit(IdNode node, string indent, StringBuilder result, Attributes attributes);
         public abstract void Visit(ClassNode node, string indent, StringBuilder result, Attributes attributes);
         public abstract void Visit(AttributeNode node, string indent, StringBuilder result, Attributes attributes);
@@ -160,21 +152,22 @@ namespace com.tiestvilee.hisp
     }
 
 
+
     public abstract class Node
     {
         protected string text;
 
-        public string GetText()
+        public virtual string GetText()
         {
             return text;
         }
 
+        public abstract void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes);
+
         public virtual Node this[int i]
         {
-            get { return null; }
+            get { throw new Exception("not implemented"); }
         }
-
-        public abstract void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes);
 
         public static string StripInvertedCommas(string input)
         {
@@ -187,29 +180,34 @@ namespace com.tiestvilee.hisp
 
         public virtual string Describe(string indent)
         {
+            if (indent == null)
+                return text + " ";
             return indent + text + "\r\n";
         }
 
     }
 
-
-    public class TagNode : Node
+    public class ListNode : Node
     {
         private IList<Node> children;
+        public IList<Node> Children { get { return children; } }
 
-        public IList<Node> Children { get { return children;  } }
-
-        public TagNode(string text, IList<Node> children)
-        {
-            this.text = text;
-            this.children = children;
-        }
+        private IList<Node> tail;
+        public Node Head { get { return children[0]; } }
+        public IList<Node> Tail { get { return tail; } }
 
         public override Node this[int i]
         {
             get { return children[i]; }
         }
 
+        public ListNode(IList<Node> children)
+        {
+            this.children = children;
+            this.text = "<<LIST>>";
+            this.tail = new List<Node>(children);
+            this.tail.RemoveAt(0);
+        }
 
         public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
         {
@@ -218,13 +216,40 @@ namespace com.tiestvilee.hisp
 
         public override string Describe(string indent)
         {
-            string result = indent + text + "\r\n";
-            foreach (Node node in children)
+            string result;
+            if (indent == null)
             {
-                result += node.Describe(indent + "    ");
+                result = "<";
+                foreach (Node node in children)
+                {
+                    result += node.Describe(null);
+                }
+                result += ">";
+            } else
+            {
+                result = indent + "\r\n";
+                foreach (Node node in children)
+                {
+                    result += node.Describe(indent + "    ");
+                }
             }
+
             return result;
         }
+    }
+
+    public class AtomNode : Node
+    {
+        public AtomNode(string text)
+        {
+            this.text = text;
+        }
+
+        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        {
+            visitor.Visit(this, indent, result, attributes);
+        }
+
     }
 
     public class IdNode : Node
@@ -290,9 +315,18 @@ namespace com.tiestvilee.hisp
 
     public class VariableNode : Node
     {
-        public VariableNode(string text)
+        private readonly object variable;
+        public object Value{get { return variable;}}
+
+        public override string GetText()
         {
-            this.text = StripInvertedCommas(text);
+            return variable.ToString();
+        }
+
+        public VariableNode(object variable)
+        {
+            this.variable = variable;
+            this.text = "VARIABLE!!!!";
         }
 
         public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
