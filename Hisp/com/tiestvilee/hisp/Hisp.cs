@@ -100,7 +100,7 @@ namespace com.tiestvilee.hisp
 
             public Node RenderTag(Dictionary<string, object> context, object head, IList<Node> nodes, string indent)
             {
-                TagContents subTagContents = new TagContents();
+                TagContents subTagContents = renderer.NewTagContents();
 
                 RenderTag_ProcessParameters(nodes, context, indent + "  ", subTagContents);
 
@@ -124,23 +124,26 @@ namespace com.tiestvilee.hisp
             }
         }
 
-        public abstract class Renderer
+        public interface Renderer
         {
-            public abstract Node RenderTag(string indent, TagContents subTagContents, string tagName);
+            Node RenderTag(string indent, TagContents subTagContents, string tagName);
+
+            TagContents NewTagContents();
         }
 
         public class HtmlRenderer : Renderer
         {
-            public override Node RenderTag(string indent, TagContents subTagContents, string tagName)
+            public Node RenderTag(string indent, TagContents subTagContents, string tagName)
             {
+                HtmlTagContents tagContents = (HtmlTagContents) subTagContents;
                 StringBuilder result = new StringBuilder();
 
-                result.Append(indent).Append('<').Append(tagName).Append(subTagContents.ToString());
+                result.Append(indent).Append('<').Append(tagName).Append(tagContents.ToString());
 
-                if (subTagContents.HasChildren)
+                if (tagContents.HasChildren)
                 {
                     result.Append(">\r\n");
-                    foreach (string child in subTagContents.Children)
+                    foreach (string child in tagContents.Children)
                     {
                         result.Append(child);
                     }
@@ -152,10 +155,28 @@ namespace com.tiestvilee.hisp
                 }
                 return new StringNode(result.ToString());
             }
+
+            public TagContents NewTagContents()
+            {
+                return new HtmlTagContents();
+            }
         }
     }
 
-    public class TagContents
+    public abstract class TagContents
+    {
+        public abstract void updateFrom(IdNode node, string indent, bool headWasList);
+
+        public abstract void updateFrom(ClassNode node, string indent, bool headWasList);
+
+        public abstract void updateFrom(AttributeNode node, string indent, bool headWasList);
+
+        public abstract void updateFrom(StringNode node, string indent, bool headWasList);
+
+        public abstract void updateFrom(VariableNode node, string indent, bool headWasList);
+    }
+
+    public class HtmlTagContents : TagContents
     {
         private Dictionary<string, string> attributes = new Dictionary<string, string>();
         IList<string> children = new List<string>();
@@ -194,9 +215,46 @@ namespace com.tiestvilee.hisp
             get { return children; }
         }
 
-        public void AddChild(string s)
+        public void AddChild(string text)
         {
-            children.Add(s);
+            children.Add(text);
+        }
+
+        public void AddChild(string indent, string text)
+        {
+            children.Add(indent + text + "\r\n");
+        }
+
+        public override void updateFrom(IdNode node, string indent, bool headWasList)
+        {
+            Id = node.GetText();
+        }
+
+        public override void updateFrom(ClassNode node, string indent, bool headWasList)
+        {
+            addAttributeValue("class", node.GetText());
+        }
+
+        public override void updateFrom(AttributeNode node, string indent, bool headWasList)
+        {
+            addAttributeValue(node.GetText(), node.GetValue());
+        }
+
+        public override void updateFrom(StringNode node, string indent, bool headWasList)
+        {
+            if (headWasList)
+            {
+                AddChild(node.GetText());
+            }
+            else
+            {
+                AddChild(indent, node.GetText());
+            }
+        }
+
+        public override void updateFrom(VariableNode node, string indent, bool headWasList)
+        {
+            AddChild(indent, node.GetText());
         }
     }
 }

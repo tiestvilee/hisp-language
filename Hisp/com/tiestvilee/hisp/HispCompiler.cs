@@ -175,10 +175,7 @@ namespace com.tiestvilee.hisp
             return this;
         }
 
-        public virtual void updateTagContents(TagContents tagContents, string indent, bool headWasList)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void updateTagContents(TagContents tagContents, string indent, bool headWasList);
     }
 
     public class ListNode : Node
@@ -225,6 +222,12 @@ namespace com.tiestvilee.hisp
 
             return result;
         }
+    
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class AtomNode : Node
@@ -244,6 +247,12 @@ namespace com.tiestvilee.hisp
             return evaluator.RenderTag(context, this, parameters, indent);
         }
 
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 
     public class IdNode : Node
@@ -255,7 +264,7 @@ namespace com.tiestvilee.hisp
 
         public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
-            tagContents.Id = text;
+            tagContents.updateFrom(this, indent, headWasList);
         }
     }
 
@@ -268,30 +277,9 @@ namespace com.tiestvilee.hisp
 
         public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
-            tagContents.addAttributeValue("class", text);
+            tagContents.updateFrom(this, indent, headWasList);
         }
     }
-
-    public class StringNode : Node
-    {
-        public StringNode(string text)
-        {
-            this.text = StripInvertedCommas(text);
-        }
-
-        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
-        {
-            if (headWasList)
-            {
-                tagContents.AddChild(text);
-            }
-            else
-            {
-                tagContents.AddChild(indent + text + "\r\n");
-            }
-        }
-    }
-
 
     public class AttributeNode : Node
     {
@@ -310,7 +298,20 @@ namespace com.tiestvilee.hisp
 
         public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
-            tagContents.addAttributeValue(text, value);
+            tagContents.updateFrom(this, indent, headWasList);
+        }
+    }
+
+    public class StringNode : Node
+    {
+        public StringNode(string text)
+        {
+            this.text = StripInvertedCommas(text);
+        }
+
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
+        {
+            tagContents.updateFrom(this, indent, headWasList);
         }
     }
 
@@ -337,7 +338,7 @@ namespace com.tiestvilee.hisp
 
         public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
-            tagContents.AddChild(indent + variable.ToString() + "\r\n");
+            tagContents.updateFrom(this, indent, headWasList);
         }
     }
 }
