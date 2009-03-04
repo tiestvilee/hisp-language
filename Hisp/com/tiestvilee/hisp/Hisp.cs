@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using antlr;
 using antlr.collections;
 using com.tiestvilee.hisp.parser;
@@ -20,13 +21,24 @@ namespace com.tiestvilee.hisp
             this.root = root;
         }
 
-        public string Render(Dictionary<string, object> context)
+        public string ToHtml(Dictionary<string, object> context)
         {
-            return new Evaluator().Eval(context, "", root).GetText();
+            return new Evaluator(new HtmlRenderer()).Eval(context, "", root).GetText();
+        }
+
+        public XmlDocument ToXml(Dictionary<string, object> context)
+        {
+            return null; // new Evaluator().Eval(context, "", root).GetText();
         }
 
         public class Evaluator
         {
+            private Hisp.Renderer renderer;
+
+            public Evaluator(Renderer renderer)
+            {
+                this.renderer = renderer;
+            }
 
             public Node Eval(Dictionary<string, object> context, string indent, ListNode nodes)
             {
@@ -34,7 +46,7 @@ namespace com.tiestvilee.hisp
 
                 if (head.GetType() == typeof(ListNode))
                 {
-                    head = Eval(context, indent + "  ", (ListNode)head);
+                    head = Eval(context, indent, (ListNode)head);
                 }
 
                 return head.Eval(this, context, nodes.Tail, indent);
@@ -88,20 +100,41 @@ namespace com.tiestvilee.hisp
 
             public Node RenderTag(Dictionary<string, object> context, object head, IList<Node> nodes, string indent)
             {
-                StringBuilder result = new StringBuilder();
                 TagContents subTagContents = new TagContents();
 
-                string newIndent = indent + "  ";
+                RenderTag_ProcessParameters(nodes, context, indent + "  ", subTagContents);
 
-                RenderTag_ProcessParameters(nodes, context, newIndent, subTagContents);
-
-                RenderTag_CreateText(indent, subTagContents, result, ((AtomNode)head).GetText());
-
-                return new StringNode(result.ToString());
+                return renderer.RenderTag(indent, subTagContents, ((AtomNode) head).GetText());
             }
 
-            private void RenderTag_CreateText(string indent, TagContents subTagContents, StringBuilder result, string tagName)
+            private void RenderTag_ProcessParameters(IList<Node> nodes, Dictionary<string, object> context, string indent, TagContents subTagContents)
             {
+                foreach (Node node in nodes)
+                {
+                    Node resultantNode = node;
+                    bool poo = false;
+                    if (node.GetType() == typeof(ListNode))
+                    {
+                        resultantNode = Eval(context, indent, (ListNode)node);
+                        poo = true;
+                    }
+
+                    resultantNode.updateTagContents(subTagContents, indent, poo);
+                }
+            }
+        }
+
+        public abstract class Renderer
+        {
+            public abstract Node RenderTag(string indent, TagContents subTagContents, string tagName);
+        }
+
+        public class HtmlRenderer : Renderer
+        {
+            public override Node RenderTag(string indent, TagContents subTagContents, string tagName)
+            {
+                StringBuilder result = new StringBuilder();
+
                 result.Append(indent).Append('<').Append(tagName).Append(subTagContents.ToString());
 
                 if (subTagContents.HasChildren)
@@ -117,22 +150,7 @@ namespace com.tiestvilee.hisp
                 {
                     result.Append("/>\r\n");
                 }
-            }
-
-            private void RenderTag_ProcessParameters(IList<Node> nodes, Dictionary<string, object> context, string newIndent, TagContents subTagContents)
-            {
-                foreach (Node node in nodes)
-                {
-                    Node resultantNode = node;
-                    bool poo = false;
-                    if (node.GetType() == typeof(ListNode))
-                    {
-                        resultantNode = Eval(context, newIndent, (ListNode)node);
-                        poo = true;
-                    }
-
-                    resultantNode.modifyNode(subTagContents, newIndent, poo);
-                }
+                return new StringNode(result.ToString());
             }
         }
     }

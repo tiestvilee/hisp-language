@@ -175,7 +175,7 @@ namespace com.tiestvilee.hisp
             return this;
         }
 
-        public virtual void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public virtual void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             throw new NotImplementedException();
         }
@@ -253,7 +253,7 @@ namespace com.tiestvilee.hisp
             this.text = text;
         }
 
-        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             tagContents.Id = text;
         }
@@ -266,7 +266,7 @@ namespace com.tiestvilee.hisp
             this.text = text;
         }
 
-        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             tagContents.addAttributeValue("class", text);
         }
@@ -279,7 +279,7 @@ namespace com.tiestvilee.hisp
             this.text = StripInvertedCommas(text);
         }
 
-        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             if (headWasList)
             {
@@ -308,7 +308,7 @@ namespace com.tiestvilee.hisp
             return value;
         }
 
-        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             tagContents.addAttributeValue(text, value);
         }
@@ -335,7 +335,7 @@ namespace com.tiestvilee.hisp
             return evaluator.ProcessVariable(context, variable, parameters, indent);
         }
 
-        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
         {
             tagContents.AddChild(indent + variable.ToString() + "\r\n");
         }
