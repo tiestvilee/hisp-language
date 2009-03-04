@@ -22,171 +22,125 @@ namespace com.tiestvilee.hisp
 
         public string Render(Dictionary<string, object> context)
         {
-            return Eval(context, "", root).GetText();
+            return new Evaluator().Eval(context, "", root).GetText();
         }
 
-
-        private static Node Eval(Dictionary<string, object> context, string indent, ListNode nodes)
+        public class Evaluator
         {
-            Node head = nodes.Head;
 
-            if (head.GetType() == typeof(ListNode))
+            public Node Eval(Dictionary<string, object> context, string indent, ListNode nodes)
             {
-                head = Eval(context, indent + "  ", (ListNode) head);
-            }
-                
-                
-            if (head.GetType() == typeof(AtomNode))
-            {
-                object variable;
-                if (context.TryGetValue(head.GetText(), out variable))
+                Node head = nodes.Head;
+
+                if (head.GetType() == typeof(ListNode))
                 {
-                    return ProcessVariable(context, nodes.Tail, variable, indent);
+                    head = Eval(context, indent + "  ", (ListNode)head);
+                }
+
+                return head.Eval(this, context, nodes.Tail, indent);
+            }
+
+            public Node ProcessVariable(Dictionary<string, object> context, object head, IList<Node> tail, string indent)
+            {
+                if (tail.Count > 0)
+                {
+                    Node memberNameNode = tail[0];
+                    if (memberNameNode.GetType() == typeof(ListNode))
+                    {
+                        memberNameNode = Eval(context, indent, (ListNode)memberNameNode);
+                    }
+                    head = MakeReflectiveCall(head, memberNameNode.GetText());
+                }
+
+                if (head.GetType().IsSubclassOf(typeof(Node)))
+                {
+                    return (Node)head;
+                }
+                return new VariableNode(head);
+            }
+
+            private object MakeReflectiveCall(object variable, string memberName)
+            {
+                foreach (MemberInfo info in variable.GetType().GetMember(memberName))
+                {
+                    if (info.GetType().IsSubclassOf(typeof(PropertyInfo)))
+                    {
+                        return ((PropertyInfo)info).GetGetMethod().Invoke(variable, null);
+                    }
+
+                    if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
+                    {
+                        return ((MethodInfo)info).Invoke(variable, null);
+                    }
+                }
+                memberName = "Get" + memberName;
+                foreach (MemberInfo info in variable.GetType().GetMember(memberName))
+                {
+                    if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
+                    {
+                        return ((MethodInfo)info).Invoke(variable, null);
+                    }
+                }
+
+                return "REFLECTIVE CALL FAILED [" + variable.GetType().Name + "].[" + memberName + "]";
+            }
+
+
+            public Node RenderTag(Dictionary<string, object> context, object head, IList<Node> nodes, string indent)
+            {
+                StringBuilder result = new StringBuilder();
+                TagContents subTagContents = new TagContents();
+
+                string newIndent = indent + "  ";
+
+                RenderTag_ProcessParameters(nodes, context, newIndent, subTagContents);
+
+                RenderTag_CreateText(indent, subTagContents, result, ((AtomNode)head).GetText());
+
+                return new StringNode(result.ToString());
+            }
+
+            private void RenderTag_CreateText(string indent, TagContents subTagContents, StringBuilder result, string tagName)
+            {
+                result.Append(indent).Append('<').Append(tagName).Append(subTagContents.ToString());
+
+                if (subTagContents.HasChildren)
+                {
+                    result.Append(">\r\n");
+                    foreach (string child in subTagContents.Children)
+                    {
+                        result.Append(child);
+                    }
+                    result.Append(indent).Append("</").Append(tagName).Append(">\r\n");
                 }
                 else
                 {
-                    return RenderTag(indent, nodes, context);
-                }
-            }
-            else if (head.GetType() == typeof(VariableNode))
-            {
-                return ProcessVariable(context, nodes.Tail, ((VariableNode) head).Value, indent);
-            }
-            else
-            {
-                return head;
-            }
-        }
-
-        private static Node ProcessVariable(Dictionary<string, object> context, IList<Node> tail, object variable, string indent)
-        {
-            if (tail.Count > 0)
-            {
-                Node memberNameNode = tail[0];
-                if(memberNameNode.GetType() == typeof(ListNode))
-                {
-                    memberNameNode = Eval(context, indent, (ListNode) memberNameNode);
-                }
-                variable = MakeReflectiveCall(variable, memberNameNode.GetText());
-            }
-
-            if (variable.GetType().IsSubclassOf(typeof(Node)))
-            {
-                return (Node) variable;
-            }
-            else
-            {
-                return new VariableNode(variable);
-            }
-        }
-
-        private static object MakeReflectiveCall(object variable, string memberName)
-        {
-            foreach (MemberInfo info in variable.GetType().GetMember(memberName))
-            {
-                if (info.GetType().IsSubclassOf(typeof(PropertyInfo)))
-                {
-                    return ((PropertyInfo)info).GetGetMethod().Invoke(variable, null);
-                }
-
-                if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
-                {
-                    return ((MethodInfo)info).Invoke(variable, null);
-                }
-            }
-            memberName = "Get" + memberName;
-            foreach (MemberInfo info in variable.GetType().GetMember(memberName))
-            {
-                if (info.GetType().IsSubclassOf(typeof(MethodInfo)))
-                {
-                    return ((MethodInfo)info).Invoke(variable, null);
+                    result.Append("/>\r\n");
                 }
             }
 
-            return "REFLECTIVE CALL FAILED [" + variable.GetType().Name + "].[" + memberName + "]";
-        }
-
-
-        private static Node RenderTag(string indent, ListNode nodes, Dictionary<string, object> context)
-        {
-            StringBuilder result = new StringBuilder();
-            IList<string> children = new List<string>();
-            Attributes subAttributes = new Attributes();
-
-            string newIndent = indent + "  ";
-            string tagName = nodes.Head.GetText();
-
-            RenderTag_ProcessParameters(nodes, context, newIndent, subAttributes, children);
-
-            RenderTag_CreateText(indent, subAttributes, children, result, tagName);
-
-            return new StringNode(result.ToString());
-        }
-
-        private static void RenderTag_CreateText(string indent, Attributes subAttributes, IList<string> children, StringBuilder result, string tagName)
-        {
-            result.Append(indent).Append('<').Append(tagName).Append(subAttributes.ToString());
-
-            if (children.Count == 0)
+            private void RenderTag_ProcessParameters(IList<Node> nodes, Dictionary<string, object> context, string newIndent, TagContents subTagContents)
             {
-                result.Append("/>\r\n");
-            }
-            else
-            {
-
-                result.Append(">\r\n");
-                foreach (string child in children)
+                foreach (Node node in nodes)
                 {
-                    result.Append(child);
-                }
-                result.Append(indent).Append("</").Append(tagName).Append(">\r\n");
-            }
-        }
-
-        private static void RenderTag_ProcessParameters(ListNode nodes, Dictionary<string, object> context, string newIndent, Attributes subAttributes, IList<string> children)
-        {
-            foreach (Node node in nodes.Tail)
-            {
-                Node resultantNode = node;
-                bool poo = false;
-                if(node.GetType() == typeof (ListNode))
-                {
-                    resultantNode = Eval(context, newIndent, (ListNode)node);
-                    poo = true;
-                }
-
-                Type type = resultantNode.GetType();
-                if (type == typeof(IdNode))
-                {
-                    subAttributes.Id = resultantNode.GetText();
-                }
-                else if (type == typeof(ClassNode))
-                {
-                    subAttributes.addAttributeValue("class", resultantNode.GetText());
-                }
-                else if (type == typeof(AttributeNode))
-                {
-                    subAttributes.addAttributeValue(resultantNode.GetText(), ((AttributeNode)resultantNode).GetValue());
-                }
-                else if (type == typeof(StringNode) || type == typeof(VariableNode))
-                {
-                    string text = resultantNode.GetText();
-                    if (poo && ! (type == typeof(VariableNode)))
+                    Node resultantNode = node;
+                    bool poo = false;
+                    if (node.GetType() == typeof(ListNode))
                     {
-                        children.Add(text);
+                        resultantNode = Eval(context, newIndent, (ListNode)node);
+                        poo = true;
                     }
-                    else
-                    {
-                        children.Add(newIndent + text + "\r\n");
-                    }
+
+                    resultantNode.modifyNode(subTagContents, newIndent, poo);
                 }
             }
         }
     }
 
-    public class Attributes
+    public class TagContents
     {
         private Dictionary<string, string> attributes = new Dictionary<string, string>();
+        IList<string> children = new List<string>();
 
         public override string ToString()
         {
@@ -212,5 +166,19 @@ namespace com.tiestvilee.hisp
 
         public string Id { set { addAttributeValue("id", value); } }
 
+        public bool HasChildren
+        {
+            get { return children.Count > 0; }
+        }
+
+        public IEnumerable Children
+        {
+            get { return children; }
+        }
+
+        public void AddChild(string s)
+        {
+            children.Add(s);
+        }
     }
 }

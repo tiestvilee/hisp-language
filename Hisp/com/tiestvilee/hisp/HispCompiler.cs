@@ -140,19 +140,6 @@ namespace com.tiestvilee.hisp
     }
 
 
-    public abstract class HispVisitor
-    {
-        public abstract void Visit(ListNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(AtomNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(IdNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(ClassNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(AttributeNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(StringNode node, string indent, StringBuilder result, Attributes attributes);
-        public abstract void Visit(VariableNode node, string indent, StringBuilder result, Attributes attributes);
-    }
-
-
-
     public abstract class Node
     {
         protected string text;
@@ -161,8 +148,6 @@ namespace com.tiestvilee.hisp
         {
             return text;
         }
-
-        public abstract void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes);
 
         public virtual Node this[int i]
         {
@@ -185,6 +170,15 @@ namespace com.tiestvilee.hisp
             return indent + text + "\r\n";
         }
 
+        public virtual Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
+        {
+            return this;
+        }
+
+        public virtual void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ListNode : Node
@@ -207,11 +201,6 @@ namespace com.tiestvilee.hisp
             this.text = "<<LIST>>";
             this.tail = new List<Node>(children);
             this.tail.RemoveAt(0);
-        }
-
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
-        {
-            visitor.Visit(this, indent, result, attributes);
         }
 
         public override string Describe(string indent)
@@ -245,9 +234,14 @@ namespace com.tiestvilee.hisp
             this.text = text;
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
         {
-            visitor.Visit(this, indent, result, attributes);
+            object variable;
+            if (context.TryGetValue(text, out variable))
+            {
+                return evaluator.ProcessVariable(context, variable, parameters, indent);
+            }
+            return evaluator.RenderTag(context, this, parameters, indent);
         }
 
     }
@@ -259,9 +253,9 @@ namespace com.tiestvilee.hisp
             this.text = text;
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
         {
-            visitor.Visit(this, indent, result, attributes);
+            tagContents.Id = text;
         }
     }
 
@@ -272,9 +266,9 @@ namespace com.tiestvilee.hisp
             this.text = text;
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
         {
-            visitor.Visit(this, indent, result, attributes);
+            tagContents.addAttributeValue("class", text);
         }
     }
 
@@ -285,9 +279,16 @@ namespace com.tiestvilee.hisp
             this.text = StripInvertedCommas(text);
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
         {
-            visitor.Visit(this, indent, result, attributes);
+            if (headWasList)
+            {
+                tagContents.AddChild(text);
+            }
+            else
+            {
+                tagContents.AddChild(indent + text + "\r\n");
+            }
         }
     }
 
@@ -307,9 +308,9 @@ namespace com.tiestvilee.hisp
             return value;
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
         {
-            visitor.Visit(this, indent, result, attributes);
+            tagContents.addAttributeValue(text, value);
         }
     }
 
@@ -329,9 +330,14 @@ namespace com.tiestvilee.hisp
             this.text = "VARIABLE!!!!";
         }
 
-        public override void Accept(HispVisitor visitor, string indent, StringBuilder result, Attributes attributes)
+        public override Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
         {
-            visitor.Visit(this, indent, result, attributes);
+            return evaluator.ProcessVariable(context, variable, parameters, indent);
+        }
+
+        public override void modifyNode(TagContents tagContents, string indent, bool headWasList)
+        {
+            tagContents.AddChild(indent + variable.ToString() + "\r\n");
         }
     }
 }
