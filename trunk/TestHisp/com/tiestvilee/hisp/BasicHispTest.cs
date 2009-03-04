@@ -59,7 +59,7 @@ namespace com.tiestvilee.hisp
             context["anobject"] = new DummyObject();
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile("html\r\n    <<<anobject Itself> Itself> Itself>");
-            Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>\r\n", hisp.Render(context));
+            Assert.AreEqual("<html>\r\n  ToString called for object\r\n</html>\r\n", hisp.ToHtml(context));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace com.tiestvilee.hisp
             context["anobject"] = new DummyObject();
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile("html\r\n    <<<anobject Itself> Itself> AddClass>");
-            Assert.AreEqual("<html class=\"red\"/>\r\n", hisp.Render(context));
+            Assert.AreEqual("<html class=\"red\"/>\r\n", hisp.ToHtml(context));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace com.tiestvilee.hisp
             Dictionary<string, object> context = new Dictionary<string, object>();
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile("html\r\n    <eq \"a\" \"a\">");
-            Assert.AreEqual("<html>\r\n  true\r\n</html>", hisp.Render(context));
+            Assert.AreEqual("<html>\r\n  true\r\n</html>", hisp.ToHtml(context));
         }
 
         [Test]
@@ -90,8 +90,8 @@ namespace com.tiestvilee.hisp
 @"html
   cond
     <eq ""a"" ""b""> <.class>");
-            Console.WriteLine(hisp.Render(context));
-            Assert.AreEqual("<html>\r\n  <body class=\"class\"/>\r\n</html>", hisp.Render(context));
+            Console.WriteLine(hisp.ToHtml(context));
+            Assert.AreEqual("<html>\r\n  <body class=\"class\"/>\r\n</html>", hisp.ToHtml(context));
         }
 
         public class DummyObject
@@ -122,7 +122,7 @@ namespace com.tiestvilee.hisp
 
             HispCompiler compiler = new HispCompiler();
             Hisp hisp = compiler.compile(hispString);
-            string actual = hisp.Render(context);
+            string actual = hisp.ToHtml(context);
             Console.WriteLine(actual);
             Assert.AreEqual(resultString, actual);
         }
