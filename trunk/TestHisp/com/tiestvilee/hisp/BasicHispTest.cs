@@ -73,6 +73,15 @@ namespace com.tiestvilee.hisp
         }
 
         [Test]
+        public void TestEq()
+        {
+            Dictionary<string, object> context = new Dictionary<string, object>();
+            HispCompiler compiler = new HispCompiler();
+            Hisp hisp = compiler.compile("html\r\n    <eq \"a\" \"a\">");
+            Assert.AreEqual("<html>\r\n  true\r\n</html>", hisp.Render(context));
+        }
+
+        [Test]
         public void TestCondReturningClass()
         {
             Dictionary<string, object> context = new Dictionary<string, object>();
@@ -80,7 +89,7 @@ namespace com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
   cond
-    <eq ""a"" ""b""> <body .class>");
+    <eq ""a"" ""b""> <.class>");
             Console.WriteLine(hisp.Render(context));
             Assert.AreEqual("<html>\r\n  <body class=\"class\"/>\r\n</html>", hisp.Render(context));
         }
