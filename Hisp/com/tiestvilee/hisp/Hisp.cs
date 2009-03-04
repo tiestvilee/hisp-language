@@ -28,7 +28,10 @@ namespace com.tiestvilee.hisp
 
         public XmlDocument ToXml(Dictionary<string, object> context)
         {
-            return null; // new Evaluator().Eval(context, "", root).GetText();
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.AppendChild(((XmlNode)new Evaluator(new XmlRenderer(xmlDocument)).Eval(context, "", root)).GetXml());
+
+            return xmlDocument;
         }
 
         public class Evaluator
@@ -161,19 +164,56 @@ namespace com.tiestvilee.hisp
                 return new HtmlTagContents();
             }
         }
+
+        public class XmlRenderer : Hisp.Renderer
+        {
+            private readonly XmlDocument document;
+
+            public XmlRenderer(XmlDocument document)
+            {
+                this.document = document;
+            }
+
+            public Node RenderTag(string indent, TagContents subTagContents, string tagName)
+            {
+                XmlTagContents tagContents = (XmlTagContents)subTagContents;
+                XmlElement result = document.CreateElement(tagName);
+
+                tagContents.updateAttributes(document, result);
+
+                if (tagContents.HasChildren)
+                {
+                    foreach (Node child in tagContents.Children)
+                    {
+                        Type childType = child.GetType();
+                        if(childType == typeof(XmlNode))
+                        {
+                            result.AppendChild(((XmlNode) child).GetXml());
+                        }
+                        else
+                        {
+                            result.AppendChild(document.CreateTextNode(child.GetText()));
+                        }
+                    }
+                }
+                return new XmlNode(result);
+            }
+
+            public TagContents NewTagContents()
+            {
+                return new XmlTagContents();
+            }
+        }
     }
 
     public abstract class TagContents
     {
         public abstract void updateFrom(IdNode node, string indent, bool headWasList);
-
         public abstract void updateFrom(ClassNode node, string indent, bool headWasList);
-
         public abstract void updateFrom(AttributeNode node, string indent, bool headWasList);
-
         public abstract void updateFrom(StringNode node, string indent, bool headWasList);
-
         public abstract void updateFrom(VariableNode node, string indent, bool headWasList);
+        public abstract void updateFrom(XmlNode node, string indent, bool headWasList);
     }
 
     public class HtmlTagContents : TagContents
@@ -255,6 +295,89 @@ namespace com.tiestvilee.hisp
         public override void updateFrom(VariableNode node, string indent, bool headWasList)
         {
             AddChild(indent, node.GetText());
+        }
+
+        public override void updateFrom(XmlNode node, string indent, bool headWasList)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class XmlTagContents : TagContents
+    {
+        private Dictionary<string, string> attributes = new Dictionary<string, string>();
+        IList<Node> children = new List<Node>();
+
+        public void addAttributeValue(string attribute, string value)
+        {
+            string oldValue = "";
+            if (attributes.TryGetValue(attribute, out oldValue))
+            {
+                attributes[attribute] = oldValue + " " + value;
+            }
+            else
+            {
+                attributes[attribute] = value;
+            }
+        }
+
+        public string Id { set { addAttributeValue("id", value); } }
+
+        public bool HasChildren
+        {
+            get { return children.Count > 0; }
+        }
+
+        public IEnumerable Children
+        {
+            get { return children; }
+        }
+
+        public void AddChild(Node node)
+        {
+            children.Add(node);
+        }
+
+        public void AddChild(string indent, Node node)
+        {
+            children.Add(node);
+        }
+
+        public override void updateFrom(IdNode node, string indent, bool headWasList)
+        {
+            Id = node.GetText();
+        }
+
+        public override void updateFrom(ClassNode node, string indent, bool headWasList)
+        {
+            addAttributeValue("class", node.GetText());
+        }
+
+        public override void updateFrom(AttributeNode node, string indent, bool headWasList)
+        {
+            addAttributeValue(node.GetText(), node.GetValue());
+        }
+
+        public override void updateFrom(StringNode node, string indent, bool headWasList)
+        {
+            AddChild(node);
+        }
+
+        public override void updateFrom(VariableNode node, string indent, bool headWasList)
+        {
+            AddChild(node);
+        }
+
+        public override void updateFrom(XmlNode node, string indent, bool headWasList)
+        {
+            AddChild(node);
+        }
+
+        public void updateAttributes(XmlDocument document, XmlElement element)
+        {
+            foreach (var pair in attributes)
+            {
+                element.SetAttribute(pair.Key, pair.Value);
+            }
         }
     }
 }

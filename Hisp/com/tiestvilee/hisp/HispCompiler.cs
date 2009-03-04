@@ -341,4 +341,26 @@ namespace com.tiestvilee.hisp
             tagContents.updateFrom(this, indent, headWasList);
         }
     }
+
+
+    public class XmlNode : Node
+    {
+        private readonly System.Xml.XmlNode xmlNode;
+
+        public XmlNode(System.Xml.XmlNode xmlNode)
+        {
+            this.xmlNode = xmlNode;
+            this.text = xmlNode.ToString();
+        }
+
+        public System.Xml.XmlNode GetXml()
+        {
+            return xmlNode;
+        }
+
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
+        {
+            tagContents.updateFrom(this, indent, headWasList);
+        }
+    }
 }
