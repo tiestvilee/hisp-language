@@ -214,6 +214,13 @@ namespace com.tiestvilee.hisp
             this.tail.RemoveAt(0);
         }
 
+        public ListNode()
+        {
+            this.children = new List<Node>();
+            this.text = "<<LIST>>";
+            this.tail = new List<Node>();
+        }
+
         public override string Describe(string indent)
         {
             string result;

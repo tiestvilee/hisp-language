@@ -30,6 +30,7 @@ namespace com.tiestvilee.hisp
         {
             Dictionary<string, object> result = new Dictionary<string, object>(context);
             result.Add("eq?", new EqualsFunction());
+            result.Add("cond", new CondFunction());
             return result;
         }
 
@@ -399,14 +400,14 @@ namespace com.tiestvilee.hisp
     {
         public override Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
         {
-            object original = parameters[0];
+            Node original = parameters[0];
             if(original.GetType() == typeof(ListNode))
             {
                 original = evaluator.Eval(context, indent, (ListNode)original);
             }
             for (int i = 1; i < parameters.Count; i++ )
             {
-                object current = parameters[i];
+                Node current = parameters[i];
                 if(current.GetType() == typeof(ListNode))
                 {
                     current = evaluator.Eval(context, indent, (ListNode)current);
@@ -421,5 +422,39 @@ namespace com.tiestvilee.hisp
         }
     }
 
+
+    internal class CondFunction : FunctionNode
+    {
+        public override Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
+        {
+            int pairIndex = 0;
+            while(parameters.Count > pairIndex + 1)
+            {
+                Node condition = parameters[pairIndex];
+                Node result = parameters[pairIndex + 1];
+
+                if (condition.GetType() == typeof(ListNode))
+                {
+                    condition = evaluator.Eval(context, indent, (ListNode)condition);
+                }
+
+                if( ((VariableNode) condition).Value.Equals(true))
+                {
+                    if (result.GetType() == typeof(ListNode))
+                    {
+                        result = evaluator.Eval(context, indent, (ListNode)result);
+                    }
+
+                    return result;
+                }
+                pairIndex += 2;
+            }
+            if (parameters.Count > pairIndex)
+            {
+                return parameters[pairIndex];
+            }
+            return new ListNode();
+        }
+    }
 
 }

@@ -93,9 +93,24 @@ namespace com.tiestvilee.hisp
             Hisp hisp = compiler.compile(
 @"html
   cond
-    <eq ""a"" ""b""> <.class>");
+    <eq? ""a"" ""b""> <.not-class>
+    <eq? ""a"" ""a""> <.class>");
             Console.WriteLine(hisp.ToHtml(context));
-            Assert.AreEqual("<html>\r\n  <body class=\"class\"/>\r\n</html>", hisp.ToHtml(context));
+            Assert.AreEqual("<html class=\"class\"/>\r\n", hisp.ToHtml(context));
+        }
+
+        [Test]
+        public void TestCondReturningDefault()
+        {
+            Dictionary<string, object> context = new Dictionary<string, object>();
+            HispCompiler compiler = new HispCompiler();
+            Hisp hisp = compiler.compile(
+@"html
+  cond
+    <eq? ""a"" ""b""> ""not this string""
+    ""a string""");
+            Console.WriteLine(hisp.ToHtml(context));
+            Assert.AreEqual("<html>\r\n  a string\r\n</html>\r\n", hisp.ToHtml(context));
         }
 
         public class DummyObject
