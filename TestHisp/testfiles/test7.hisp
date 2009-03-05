@@ -1,4 +1,14 @@
 ﻿html
-    body 
-        div
-            <<anobject Itself> Itself>
+    <eq? "a" "a">
+    <eq? "a" "b">
+    <eq? a a>
+    <eq? a b>
+    <eq? .class1 .class1>
+    <eq? .class1 .differentclass>
+    <eq? #anId #anId>
+    <eq? #anId #anotherId>
+    <eq? @attr=value @attr=value>
+    <eq? @attr=value @attr=anothervalue>
+    <eq? @attr=value @attr2=value>
+    <eq? <stringvariable1> <stringvariable2>>
+    <eq? <stringvariable1> <stringvariable3>>    

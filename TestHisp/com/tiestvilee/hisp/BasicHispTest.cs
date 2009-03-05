@@ -76,9 +76,13 @@ namespace com.tiestvilee.hisp
         public void TestEq()
         {
             Dictionary<string, object> context = new Dictionary<string, object>();
-            HispCompiler compiler = new HispCompiler();
-            Hisp hisp = compiler.compile("html\r\n    <eq \"a\" \"a\">");
-            Assert.AreEqual("<html>\r\n  true\r\n</html>", hisp.ToHtml(context));
+            context.Add("stringvariable1", "a string");
+            context.Add("stringvariable2", "a string");
+            context.Add("stringvariable3", "a different string");
+            context.Add("numbervariable1", 444);
+            context.Add("numbervariable2", 444);
+            context.Add("numbervariable3", 555);
+            AssertThatHispRendersCorrectly("testfiles\\test7.hisp", "testfiles\\test7.html", context);
         }
 
         [Test]

@@ -15,7 +15,7 @@ options {
 class HispLexer extends Lexer;
 
 // one-or-more letters followed by a newline
-UNQUOTED_STRING:   ( 'a'..'z'|'A'..'Z'|'0'..'9'|'-'|'_' )+;
+UNQUOTED_STRING:   ( 'a'..'z'|'A'..'Z'|'0'..'9'|'-'|'_'|'?')+;
 STRING: '"' (~('"'))* '"';
 
 LPAREN: '<';
