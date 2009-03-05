@@ -175,6 +175,20 @@ namespace com.tiestvilee.hisp
             return this;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return text.Equals(((Node)obj).GetText());
+        }
+
+        public override int GetHashCode()
+        {
+            return text.GetHashCode();
+        }
+
         public abstract void updateTagContents(TagContents tagContents, string indent, bool headWasList);
     }
 
@@ -300,6 +314,45 @@ namespace com.tiestvilee.hisp
         {
             tagContents.updateFrom(this, indent, headWasList);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            AttributeNode attr = (AttributeNode) obj;
+            return text.Equals(attr.text) && value.Equals(attr.value);
+        }
+
+        public override int GetHashCode()
+        {
+            return text.GetHashCode() + value.GetHashCode();
+        }
+    }
+
+    public abstract class FunctionNode : Node
+    {
+        public abstract Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent);
+
+        public override void updateTagContents(TagContents tagContents, string indent, bool headWasList)
+        {
+            throw new Exception("functions should be evaluated, not used to update tag contents");
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
     }
 
     public class StringNode : Node
@@ -340,6 +393,21 @@ namespace com.tiestvilee.hisp
         {
             tagContents.updateFrom(this, indent, headWasList);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return variable.Equals(((VariableNode)obj).Value);
+        }
+
+        public override int GetHashCode()
+        {
+            return variable.GetHashCode();
+        }
+
     }
 
 

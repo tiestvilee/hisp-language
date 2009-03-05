@@ -23,13 +23,20 @@ namespace com.tiestvilee.hisp
 
         public string ToHtml(Dictionary<string, object> context)
         {
-            return new Evaluator(new HtmlRenderer()).Eval(context, "", root).GetText();
+            return new Evaluator(new HtmlRenderer()).Eval(contextWithPredefinedValues(context), "", root).GetText();
+        }
+
+        private Dictionary<string, object> contextWithPredefinedValues(Dictionary<string, object> context)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>(context);
+            result.Add("eq?", new EqualsFunction());
+            return result;
         }
 
         public XmlDocument ToXml(Dictionary<string, object> context)
         {
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.AppendChild(((XmlNode)new Evaluator(new XmlRenderer(xmlDocument)).Eval(context, "", root)).GetXml());
+            xmlDocument.AppendChild(((XmlNode)new Evaluator(new XmlRenderer(xmlDocument)).Eval(contextWithPredefinedValues(context), "", root)).GetXml());
 
             return xmlDocument;
         }
@@ -57,6 +64,11 @@ namespace com.tiestvilee.hisp
 
             public Node ProcessVariable(Dictionary<string, object> context, object head, IList<Node> tail, string indent)
             {
+                if (head.GetType().IsSubclassOf(typeof(FunctionNode)))
+                {
+                    return ((FunctionNode) head).Eval(this, context, tail, indent);
+                }
+
                 if (tail.Count > 0)
                 {
                     Node memberNameNode = tail[0];
@@ -64,6 +76,7 @@ namespace com.tiestvilee.hisp
                     {
                         memberNameNode = Eval(context, indent, (ListNode)memberNameNode);
                     }
+
                     head = MakeReflectiveCall(head, memberNameNode.GetText());
                 }
 
@@ -380,4 +393,33 @@ namespace com.tiestvilee.hisp
             }
         }
     }
+
+
+    internal class EqualsFunction : FunctionNode
+    {
+        public override Node Eval(Hisp.Evaluator evaluator, Dictionary<string, object> context, IList<Node> parameters, string indent)
+        {
+            object original = parameters[0];
+            if(original.GetType() == typeof(ListNode))
+            {
+                original = evaluator.Eval(context, indent, (ListNode)original);
+            }
+            for (int i = 1; i < parameters.Count; i++ )
+            {
+                object current = parameters[i];
+                if(current.GetType() == typeof(ListNode))
+                {
+                    current = evaluator.Eval(context, indent, (ListNode)current);
+                }
+
+                if( ! current.Equals(original))
+                {
+                    return new VariableNode(false);                    
+                }
+            }
+            return new VariableNode(true);
+        }
+    }
+
+
 }
